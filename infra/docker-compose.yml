@@ -1,0 +1,81 @@
+services:
+  loadbalancer:
+    image: nginx
+    container_name: loadbalancer
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8080:80"
+    environment:
+      - NGINX_HOST=foobar.com
+      - NGINX_PORT=80
+    depends_on:
+      - scheduler1
+      - scheduler2
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+      - POSTGRES_DB=dummydb
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: example@example.com
+      PGADMIN_DEFAULT_PASSWORD: "password"
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    ports:
+      - 5431:80
+
+  # Pulling from remote
+  # datagenerator:
+  #   image: gitlab.ewi.tudelft.nl:4242/in4315/2022-2023/sa-team5/train-scheduler-generator
+
+  # ui:
+  #   image: gitlab.ewi.tudelft.nl:4242/in4315/2022-2023/sa-team5/train-scheduler-ui
+
+  # scheduler1:
+  #   image: gitlab.ewi.tudelft.nl:4242/in4315/2022-2023/sa-team5/train-scheduler
+
+  # scheduler2:
+  #   image: gitlab.ewi.tudelft.nl:4242/in4315/2022-2023/sa-team5/train-scheduler
+
+  # Building locally
+  datagenerator:
+    container_name: datagenerator
+    build:
+      context: ../live_data_generator
+      dockerfile: Dockerfile
+
+  ui:
+    container_name: schedulerui
+    build:
+      context: ../ui/sa-ui
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+  scheduler1:
+    container_name: scheduler1
+    build:
+      context: ../TrainScheduler
+      dockerfile: Dockerfile
+
+  scheduler2:
+    container_name: scheduler2
+    build:
+      context: ../TrainScheduler
+      dockerfile: Dockerfile
+
+volumes:
+  db:
+  pgadmin:
