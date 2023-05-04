@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Microservices Architecture | NS System Design - Software Architecture IN4315</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Microservices Architecture" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<meta property="og:description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<link rel="canonical" href="http://localhost:4000/appendices/design/microservices/train_management_design_summary_microservices/" />
+<meta property="og:url" content="http://localhost:4000/appendices/design/microservices/train_management_design_summary_microservices/" />
+<meta property="og:site_name" content="NS System Design - Software Architecture IN4315" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Microservices Architecture" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.","headline":"Microservices Architecture","url":"http://localhost:4000/appendices/design/microservices/train_management_design_summary_microservices/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="NS System Design - Software Architecture IN4315" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">NS System Design - Software Architecture IN4315</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/accountability/">Accountability</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Microservices Architecture</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="train-management-microservices-design">Train Management Microservices Design</h1>
+
+<p>Microservices are small applications that carry out a single task. They can be deployed, tested and scaled independently. The concept originates from the breakdown of the monolith architecture into a granular system communicating via messages. This provide industries and developers with agile delivery methods for service-oriented architectures and facilitates the transition from function-oriented legacy designs to highly flexible services <a class="citation" href="#microservices_general">(Larrucea et al., 2018)</a>.</p>
+
+<p>Some notable dependencies on the system are the train schedules which impose limits on the maintenance scheduler. Microservices integrate these dependencies using a train availability API connected to the maintenance scheduler. Raw data are provided by the railway network sensors and the rail traffic management system { % cite nsertms %}. The live data ingestion engine forwards the data to a live database optimized to store time-based information such as the GPS coordinates. The summarization service creates then a summary of the train status and passes it to the maintenance scheduler. Train status, maintenance status and summary are stored in an SQL database. We have decided to use PostgreSQL since all team members are familiar with it.</p>
+
+<p>Thus, we discuss below two main aspects in train management, the data aspect and the scheduling and maintenance aspect. Furthermore, in the following diagram, we highligh the modules outside of the train management system with red colour, whereas the nodes in white are the essential parts of our system.</p>
+
+<!-- , however these are shown to consider the connections from and to the endpoints of the train management. -->
+
+<p><img src="/appendices/design/microservices/train_management_vertical_microservices.drawio.png" alt="Train Management vertical microservices' architecture design image." /></p>
+
+<h2 id="data">Data</h2>
+<p>Mainly entails the services used for the collection, storage, and provision of data surrounding the travelling trains.</p>
+
+<ol>
+  <li>
+    <p>Live data ingestion: The live data input for the system which comes from the sensors in the train, i.e., the GPS, speedometer or brakes.</p>
+  </li>
+  <li>
+    <p>Train summary (Postgres database): Database for trains operated/owned by the NS. Contains all train information such as type, distance travelled and maintenance status.</p>
+  </li>
+  <li>
+    <p>Train data aggregator: Combines the live data with the data from the train summary database. For example, if there is a train or network malfunction then the maintenance status of the train will be updated in the database. Similarly, if the train has travelled 10 km since the last synchronization, the train data aggregator will also update the database.</p>
+  </li>
+  <li>
+    <p>Live database: Database for the live data of the trains. This database is mainly focused on demand performance. The database contains data about the location and travel times of the trains.</p>
+  </li>
+  <li>
+    <p>Live data API: API for getting the live data from the database.</p>
+  </li>
+  <li>
+    <p>Train timeliness API: API for the live travel times of the trains. This API delivers the data mainly to the app/website travel planner and the schedule boards at the stations.</p>
+  </li>
+  <li>
+    <p>Train positioning API: API for the live location of the trains. This API delivers the data to the train radar and to NS personnel responsible for the railway network operation.</p>
+  </li>
+</ol>
+
+<h2 id="scheduling-and-maintenance">Scheduling and maintenance</h2>
+
+<ol>
+  <li>
+    <p>Maintenance scheduler: Retrieves the maintenance status of trains and schedules maintenance activities. The scheduler is associated with the train scheduler affecting and imposing limits on each other. This occurs since schedules are planned according to availability.</p>
+  </li>
+  <li>
+    <p>Manual maintenance API: Manual input of a maintenance job, mainly used for emergencies or on the go maintenance. The information of the manual maintenance gets send forwards towards the maintenance scheduler.</p>
+  </li>
+  <li>
+    <p>Train availability API: Retrieves and combines the data from the live data API and the maintenance scheduler. Used for imposing or resolving limits on train schedules.</p>
+  </li>
+</ol>
+
+<h2 id="benefits-and-challenges">Benefits and Challenges</h2>
+
+<p>In general, microservices enable the creation of a fault-tolerant system and present many advantages. Nonetheless they might not be entirely suitable for our system design.</p>
+
+<h3 id="benefits">Benefits</h3>
+
+<ul>
+  <li>Fault-tolerance was briefly mentioned before, with decoupling a failure of a component does not stop the whole system. Furthermore it is possible to use duplicate services for the key components. In case of failure, these duplicates can still continue processing messages and the system remains operational.</li>
+  <li>The microservices architecture provides a high level of modularity for the system. As the different system components are seperated, then each component can contain its own dependency management, compilation and deployment.</li>
+  <li>Given the system modularity, this architecture can achieve a high level of scalability. Any loose component can easily be added or replaced for better scalability.</li>
+</ul>
+
+<h3 id="drawbacks">Drawbacks</h3>
+
+<ul>
+  <li>Microservices have higher complexity and require a higher throughput (demand performance) throughout the system. For example, there are several requests which need to pass through different components in order data to reach the train availability component from the database.</li>
+  <li>Tied with higher complexity and throughput, they require extra effort for security. Data are often sent over multiple links/connections and, therefore, it is necessary to secure these connections for each component.</li>
+  <li>Decoupling might not be as effective as considered. It was mentioned before as a benefit, nevertheless a lot of the processes of this subsystem present heavy dependencies on each other. Thus, having duplicate services for key components might not be feasible.
+&lt;!–
+    <h1 id="conclusion">Conclusion</h1>
+    <p>Microservices is somewhat suitable for use in the NS system as it has some benefits we are looking for. however the use of the microservices comes with a bigger effort required due to the complexity and the security aspects.
+ –&gt;</p>
+  </li>
+</ul>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">NS System Design - Software Architecture IN4315</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">NS System Design - Software Architecture IN4315</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

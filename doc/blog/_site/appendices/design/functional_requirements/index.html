@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Functional Requirements | NS System Design - Software Architecture IN4315</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Functional Requirements" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<meta property="og:description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<link rel="canonical" href="http://localhost:4000/appendices/design/functional_requirements/" />
+<meta property="og:url" content="http://localhost:4000/appendices/design/functional_requirements/" />
+<meta property="og:site_name" content="NS System Design - Software Architecture IN4315" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Functional Requirements" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.","headline":"Functional Requirements","url":"http://localhost:4000/appendices/design/functional_requirements/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="NS System Design - Software Architecture IN4315" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">NS System Design - Software Architecture IN4315</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/accountability/">Accountability</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Functional Requirements</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="introduction">Introduction</h2>
+
+<p>Before diving into functional requirements, it is very important to understand the user’s needs and requirements i.e., user stories. The success of a software system depends on how well it satisfies the user stories, and architects must prioritize user satisfaction throughout the development process <a class="citation" href="#chopade2017agile">(Chopade &amp; Dhavase, 2017)</a>.</p>
+
+<h2 id="1-user-stories-for-the-ns-system">1. User Stories for the NS system</h2>
+
+<ol>
+  <li>
+    <p>As a passenger, I want the NS system to provide me with a user-friendly interface that allows me to easily plan my route and access real-time train information.</p>
+  </li>
+  <li>
+    <p>As a passenger, I want the NS system to provide a reliable and secure payment system that allows me to purchase tickets easily and safely.</p>
+  </li>
+  <li>
+    <p>As a passenger, I want the NS system to offer me parking facilities for bikes and cars at train stations and the ability to purchase parking tickets in advance.</p>
+  </li>
+  <li>
+    <p>As a passenger with a busy schedule, I want the ns.nl system to offer me the ability to book train tickets in advance and receive alerts for train delays and cancellations.</p>
+  </li>
+  <li>
+    <p>As a passenger with a preference for sustainable travel, I want the ns.nl system to offer me information about eco-friendly travel options, such as electric trains and bike rentals.</p>
+  </li>
+  <li>
+    <p>As a passenger with a flexible schedule, I want the ns.nl system to offer me the ability to purchase off-peak tickets at a discounted rate.</p>
+  </li>
+  <li>
+    <p>As a passenger with a disability, I want the ns.nl system to provide me with accessible services, such as audio announcements and tactile maps.</p>
+  </li>
+  <li>
+    <p>As a student, I want the ns.nl system to offer me discounted fares that suit my budget and academic schedule.</p>
+  </li>
+  <li>
+    <p>As a passenger with a specific dietary requirement, I want the ns.nl system to provide me with information about on-board food options, as well as the ability to pre-order meals that meet my dietary needs.</p>
+  </li>
+  <li>
+    <p>As a passenger with a pet, I want the ns.nl system to provide me with clear guidelines and policies for traveling with pets, as well as facilities like designated pet areas.</p>
+  </li>
+  <li>
+    <p>As a passenger with a large group, I want the ns.nl system to offer me group travel packages that include discounts on train tickets, accommodations, and other services.</p>
+  </li>
+  <li>
+    <p>As a business passenger, I want the ns.nl system to offer me the ability to book and manage multiple train tickets for my team, with features like centralized billing and reporting.</p>
+  </li>
+  <li>
+    <p>As a business passenger with a tight schedule, I want the ns.nl system to offer me the ability to reserve seats and workspaces on trains, as well as access to on-board Wi-Fi and other amenities.</p>
+  </li>
+  <li>
+    <p>As a frequent passenger, I want the ns.nl system to offer me a loyalty program that rewards me for my frequent use of the service, with benefits like discounted fares and priority boarding.</p>
+  </li>
+  <li>
+    <p>As a frequent passenger, I want the NS.nl system to offer a mobile app that allows me to track my train history and see my past journeys, so that I can keep track of my travel habits.</p>
+  </li>
+  <li>
+    <p>As a passenger, I want the NS.nl system to provide a mobile app that allows me to purchase tickets and store them on my phone, so that I don’t have to worry about printing or losing physical tickets.</p>
+  </li>
+  <li>
+    <p>As a passenger, I want the NS.nl system to offer a feedback mechanism that allows me to share my experience and provide suggestions for improvement, so that the service can be continuously improved to meet the needs of users.</p>
+  </li>
+  <li>
+    <p>As a tourist visiting the Netherlands, I want the ns.nl system to provide me with information about local attractions and events, as well as tips for getting around the country by train.</p>
+  </li>
+  <li>
+    <p>As a train operator, I want to be able to view and manage train schedules and routes, so that I can optimize train operations and reduce delays and cancellations.</p>
+  </li>
+  <li>
+    <p>As a customer service representative, I want to be able to view passenger information and ticketing data, so that I can assist passengers with their travel needs and resolve issues quickly and efficiently.</p>
+  </li>
+</ol>
+
+<h2 id="2-scenarios">2. Scenarios</h2>
+
+<h3 id="now-lets-look-at-some-scenarios-of-how-the-ns-system-will-be-used">Now, let’s look at some scenarios of how the NS System will be used.</h3>
+
+<ol>
+  <li>
+    <p>Tickets Purchasing: Passengers purchase tickets for train journeys on selected dates and times.</p>
+  </li>
+  <li>
+    <p>Real-Time information: Passengers access real-time information about train schedules, delays, and cancellations through digital displays at train stations, the ns.nl app, or the ns.nl website. The system also provides information about train connections, platform numbers, and seat availability to help passengers plan their journeys.</p>
+  </li>
+  <li>
+    <p>Trip Planning: The real-time information provided by the system helps passengers plan their trip accordingly, without any disruptions.</p>
+  </li>
+  <li>
+    <p>Customer Service: Customer service representatives assist passengers with their queries and complaints. The system allows representatives to access passenger information, such as ticket purchases and journey history, to provide personalized assistance.</p>
+  </li>
+  <li>
+    <p>Subscriptions: The system offers various subscriptions during off-peak hours, peak hours, group discounts, etc. People who travel often in trains buy these subscriptions.</p>
+  </li>
+  <li>
+    <p>Maintenance Team: The system tracks the condition of trains, signals, and tracks to identify any issues that may affect train operations. Maintenance crews use this information to schedule maintenance activities, such as inspections and repairs, to minimize downtime and ensure safe and reliable train service.</p>
+  </li>
+</ol>
+
+<h2 id="3-sequential-diagrams">3. Sequential Diagrams</h2>
+
+<h3 id="31-purchasing-a-train-ticket">3.1 Purchasing a train ticket</h3>
+
+<p><img src="/assets/SeqDiag1.png" alt="Purchasing a train ticket" title="Purchasing a train ticket" /></p>
+
+<h3 id="311-actors">3.1.1 Actors:</h3>
+
+<ol>
+  <li>
+    <p>Traveller</p>
+  </li>
+  <li>
+    <p>Payment Processor</p>
+  </li>
+  <li>
+    <p>Train Database</p>
+  </li>
+  <li>
+    <p>NS System</p>
+  </li>
+</ol>
+
+<h3 id="312-events">3.1.2 Events:</h3>
+
+<ol>
+  <li>
+    <p>User selects the desired train journey and ticket type in the ns.nl app.</p>
+  </li>
+  <li>
+    <p>The app sends a request to the Train Database for availability and pricing information.</p>
+  </li>
+  <li>
+    <p>The Train Database responds with the availability and pricing information for the selected journey and ticket type.</p>
+  </li>
+  <li>
+    <p>The app presents the user with the availability and pricing information.</p>
+  </li>
+  <li>
+    <p>The user selects a ticket and enters their payment information.</p>
+  </li>
+  <li>
+    <p>The app sends a request to the Payment Processor to process the payment.</p>
+  </li>
+  <li>
+    <p>The Payment Processor responds with a confirmation of the payment.</p>
+  </li>
+  <li>
+    <p>The app sends a request to the Train Database to reserve the ticket for the user.</p>
+  </li>
+  <li>
+    <p>The Train Database confirms the ticket reservation and sends a confirmation to the app.</p>
+  </li>
+  <li>
+    <p>The app presents the user with the ticket confirmation and travel details.</p>
+  </li>
+</ol>
+
+<h3 id="32-customer-service">3.2 Customer Service</h3>
+
+<p><img src="/assets/SeqDiag2.png" alt="Customer Service" title="Customer Service" /></p>
+
+<h3 id="321-actors">3.2.1 Actors</h3>
+
+<ol>
+  <li>
+    <p>User</p>
+  </li>
+  <li>
+    <p>Customer Service Representative</p>
+  </li>
+  <li>
+    <p>Train Database</p>
+  </li>
+  <li>
+    <p>NS System</p>
+  </li>
+</ol>
+
+<h3 id="322-events">3.2.2 Events</h3>
+
+<ol>
+  <li>
+    <p>User contacts Customer Service through the ns.nl app or website.</p>
+  </li>
+  <li>
+    <p>The app or website connects the user with a Customer Service Representative.</p>
+  </li>
+  <li>
+    <p>The Customer Service Representative requests the user’s booking details and issue description.</p>
+  </li>
+  <li>
+    <p>The app sends a request to the Train Database for the user’s booking details.</p>
+  </li>
+  <li>
+    <p>The Train Database responds with the user’s booking details.</p>
+  </li>
+  <li>
+    <p>The Customer Service Representative assists the user with their issue, which may include changing or cancelling a booking, providing travel information, or addressing a complaint.</p>
+  </li>
+  <li>
+    <p>The Customer Service Representative updates the user’s booking details in the Train Database as necessary.</p>
+  </li>
+  <li>
+    <p>The app displays the updated booking details and resolution to the user.</p>
+  </li>
+</ol>
+
+<h2 id="4-functional-requirements">4. Functional Requirements</h2>
+
+<p>According to Pautasso { % cite pautasso % }, functional requirements need to be correct, complete and compliant. This framework is used to identify the functional requirements of the NS system.</p>
+
+<p><strong>1. Administrator:</strong></p>
+
+<ul>
+  <li>
+    <p>User Management: The system should have a user management module that allows users to create an account, sign in, and manage their profile. The module should also provide role-based access control for different types of users, such as passengers, employees, and administrators.</p>
+  </li>
+  <li>
+    <p>Train Management: The system should have a train management module that allows administrators to manage the train schedules, assign routes, and track train locations. The module should also provide a real-time dashboard for administrators to monitor train status and resolve any issues that arise.</p>
+  </li>
+</ul>
+
+<p><strong>2. Train Scheduling and Management:</strong></p>
+
+<ul>
+  <li>
+    <p>Train schedule management: The train scheduler needs to have access to a user-friendly system that enables them to create, manage and update train schedules. This system should allow the scheduler to assign trains to specific routes, determine departure and arrival times, and adjust schedules in real time if necessary.</p>
+  </li>
+  <li>
+    <p>Train capacity planning: The scheduling team should be able to monitor and manage the capacity of each train, ensuring that the number of seats available is sufficient to meet demand. The system should provide information on the number of passengers expected on each train and allow the scheduler to adjust capacity as needed.</p>
+  </li>
+  <li>
+    <p>Route optimization: The scheduler should have access to a system that enables them to optimize train routes to ensure the most efficient use of resources. The system should consider factors such as travel time, distance, and passenger demand to create the most efficient and cost-effective route.</p>
+  </li>
+  <li>
+    <p>Communication with other departments: The scheduler should be able to communicate effectively with other departments, such as maintenance and operations, to ensure that all necessary resources are available to operate each train. The system should provide a communication platform to facilitate coordination and collaboration between departments.</p>
+  </li>
+  <li>
+    <p>Real-Time information: The scheduler should have access to a system that allows them to manage train delays efficiently. This system should enable the scheduler to track train performance in real time, provide updated arrival and departure times to passengers, and make necessary adjustments to the schedule to minimize the impact of delays.</p>
+  </li>
+  <li>
+    <p>Reporting and analysis: The scheduler should have access to a system that provides comprehensive reporting and analysis capabilities. The system should generate reports on train performance, passenger demand, and other key metrics to enable the scheduler to make data-driven decisions.</p>
+  </li>
+</ul>
+
+<p><strong>3. Train Conductor:</strong></p>
+
+<ul>
+  <li>
+    <p>Passenger management: This functionality allows conductors to manage passenger reservations, check and validate passenger tickets, and assist with boarding passengers.</p>
+  </li>
+  <li>
+    <p>Ticket validation: This functionality enables conductors to scan or validate tickets using mobile devices or onboard ticket machines and identify invalid or fraudulent tickets.</p>
+  </li>
+  <li>
+    <p>Onboard announcements: This functionality enables conductors to make important announcements to passengers, such as schedule changes, route information, and safety instructions.</p>
+  </li>
+</ul>
+
+<p><strong>4. Accounting:</strong></p>
+
+<ul>
+  <li>
+    <p>Statistics and reporting: This functionality enables the management crew to track key performance indicators (KPIs), generate reports on revenue and costs, and analyse customer feedback and satisfaction.</p>
+  </li>
+  <li>
+    <p>Inventory management: This functionality the crew to manage inventory levels of key resources like trains, fuel, and maintenance equipment, and ensure that sufficient resources are available to meet customer demand.</p>
+  </li>
+</ul>
+
+<p><strong>5. Ticket Purchasing System:</strong> The system should have a ticketing system that allows users to purchase tickets for trains, view their train schedules, and track their train status. The module should also provide an option for users to cancel or modify their tickets. It should also store customer travel and booking data for future reference.</p>
+
+<p><strong>6. Customer Service:</strong> The system should provide excellent customer service to passengers. The system should have trained staff, clear communication channels, and customer feedback mechanisms in place to ensure that passengers are satisfied with the services. The module should also provide an option for users to contact customer support through different channels such as email, phone, and chat.</p>
+
+<p><strong>7. Payment Gateway:</strong> The system should have a payment gateway module that allows users to pay for their tickets securely using different payment methods such as credit/debit cards, mobile wallets, and net banking. It should also process customer payments securely and efficiently.</p>
+
+<p><strong>8. Functional Behaviour:</strong> The system should handle invalid customer inputs, such as incorrect booking details or payment information, and provide appropriate error messages to the user. The system should also handle system errors, such as server downtime or network connectivity issues, and provide appropriate feedback to the user.</p>
+
+<ol class="bibliography"><li><span id="chopade2017agile">Chopade, M. R. M., &amp; Dhavase, N. S. (2017). Agile software development: Positive and negative user stories. <i>2017 2nd International Conference for Convergence in Technology (I2CT)</i>, 297–299.</span></li></ol>
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">NS System Design - Software Architecture IN4315</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">NS System Design - Software Architecture IN4315</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

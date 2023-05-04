@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Event Bus Architecture | NS System Design - Software Architecture IN4315</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Event Bus Architecture" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<meta property="og:description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<link rel="canonical" href="http://localhost:4000/appendices/design/event-bus/train_management_event_bus_design_summary/" />
+<meta property="og:url" content="http://localhost:4000/appendices/design/event-bus/train_management_event_bus_design_summary/" />
+<meta property="og:site_name" content="NS System Design - Software Architecture IN4315" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Event Bus Architecture" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.","headline":"Event Bus Architecture","url":"http://localhost:4000/appendices/design/event-bus/train_management_event_bus_design_summary/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="NS System Design - Software Architecture IN4315" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">NS System Design - Software Architecture IN4315</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/accountability/">Accountability</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Event Bus Architecture</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="train-management-event-bus-design">Train Management Event Bus Design</h1>
+<p>This design is centered around the event bus architecture where multiple subscription topics are used for the various subsystems. An event-driven architecture employs events to activate and communicate amongst disconnected services. An event is a change in status or an update and can either convey the state or act as identifier. Event-driven architectures are made up of three major components: event producers, event routers, and event consumers. A producer sends an event to the router, which filters and sends the events to consumers. Producer and consumer services are separated, allowing them to be expanded, modified and delivered separately <a class="citation" href="#bruns_dunkel">(Bruns &amp; Jürgen, 2010)</a>.</p>
+
+<p><img src="/appendices/design/event-bus/train_management_vertical_event_bus.drawio.png" alt="Train management event bus architecture design" /></p>
+
+<h2 id="storage-process">Storage Process</h2>
+<p>This process listens to the live data coming in on the event bus from provided by the railway network sensors and the rail traffic management system which publish to the event bus. Then, it pipes all live data to the live database allowing for replays. Furthermore, it summarizes all incoming live data to keep a summary on the train system sends this information to other systems.</p>
+
+<h2 id="maintenance-scheduler">Maintenance Scheduler</h2>
+<p>This system has three responsibilities (i) it checks regularly the trains’ status fetching data from the train summary database (ii) it schedules manual maintenance. The scheduler forwards the maintenance schedules to the train scheduler since train schedules are planned based on availability.</p>
+
+<h2 id="manual-maintenance-api">Manual Maintenance API</h2>
+<p>This API exposes an endpoint for employees to plan manual maintenance in case of an emergency breakdown or infrastructure damage. Also, it is used by railway engineers who inspect trains and determine if they need maintenance earlier.</p>
+
+<h2 id="other-dependencies">Other Dependencies</h2>
+<p>All the other dependencies can obtain the required information by subscribing to the event bus.</p>
+
+<h2 id="benefits-and-challenges">Benefits and Challenges</h2>
+<p>In general, the event bus architecture enables the creation of a fault-tolerant system and presents many advantages. Nonetheless it might not be entirely suitable for our system design.</p>
+
+<h2 id="benefits">Benefits</h2>
+<ul>
+  <li>Fault-tolerance was briefly mentioned before. It works well in the event bus architecture, because it is possible to use duplicate services to listen the same subscription topics. Thus, in case of a failure, duplicate services can still continue processing messages and the system remains operational.</li>
+  <li>Decoupling is related to fault-tolerance. If one part of the subsystem fails others can continue functioning.</li>
+</ul>
+
+<h2 id="drawbacks">Drawbacks</h2>
+
+<ul>
+  <li>The event bus allows saving messages until they are delivered. This is a positive attribute, however it is not necessary for our system. The storage process is able to retransmit data from the live database or the train summary database, if necessary. Moreover missing messages from the railway sensors is not an issue since it is possible to interpolate data points in order to model the missed messages.</li>
+  <li>Decoupling might not be as effective as considered. It was mentioned before as a benefit, nevertheless a lot of the processes in this subsystem have heavy dependencies on each other. Thus, if one part crashes the rest system might also stop working.</li>
+  <li>An inherent drawback of this architecture is that the event bus throughput is limited. A possible increase of the incoming sensor data or the attachment of multiple new systems to the event bus can not be easy or feasible. Hence, this architecture might require either splitting the bus up into smaller sub-buses (which increases complexity) or moving to an entirely different architecture in case system needs to expand.</li>
+</ul>
+
+<!-- # Conclusion
+In the end it seems that the event bus architecture is not completely fit for this subsystem, mainly because the benefits provided are not the ones we are looking for. As well as the drawbacks stemming from the fact that there is a lot of communication and coupling between services. -->
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">NS System Design - Software Architecture IN4315</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">NS System Design - Software Architecture IN4315</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

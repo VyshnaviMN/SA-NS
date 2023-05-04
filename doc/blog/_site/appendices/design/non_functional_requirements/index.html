@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Non-Functional Requirements | NS System Design - Software Architecture IN4315</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Non-Functional Requirements" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<meta property="og:description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<link rel="canonical" href="http://localhost:4000/appendices/design/non_functional_requirements/" />
+<meta property="og:url" content="http://localhost:4000/appendices/design/non_functional_requirements/" />
+<meta property="og:site_name" content="NS System Design - Software Architecture IN4315" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Non-Functional Requirements" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.","headline":"Non-Functional Requirements","url":"http://localhost:4000/appendices/design/non_functional_requirements/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="NS System Design - Software Architecture IN4315" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">NS System Design - Software Architecture IN4315</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/accountability/">Accountability</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Non-Functional Requirements</h1>
+  </header>
+
+  <div class="post-content">
+    <h2 id="introduction">Introduction</h2>
+
+<h2 id="literature-review">Literature Review</h2>
+
+<p>Non-functional requirements are used to describe the intended properties or features of the software system and give direction to the software architects on how to develop the system to fulfil the specified quality attributes. They aid in managing trade-offs between competing quality criteria and arranging the design selections in a more effective order. They provide stakeholders a consistent vocabulary to use when discussing the intended behavior of the system.</p>
+
+<p>Before designing our system, we studied both Pautasso’s (missing reference) and Sommerville’s <a class="citation" href="#sommerville">(Sommerville, 2010)</a> approaches. For the purposes of this course, we follow Pautasso’s approach categorizing the non-functional requirements to internal/external and static/dynamic and, therefore, we have 5 different categories: Design, Normal Operation, Dependability, Security, Long Term Qualities.</p>
+
+<p><img src="/assets/sommerville-qualities.png" alt="Non-functional requirements according to Sommerville." title="Non-functional requirements according to Sommerville" /></p>
+
+<p><img src="/assets/pautasso-qualities.png" alt="Non-functional (or Extra-functional according to the recent version) requirements according to Pautasso." title="Non-functional requirements according to Pautasso" /></p>
+
+<h2 id="prioritization-method">Prioritization Method</h2>
+
+<p>Our analysis uses the MoSCoW method, which is a four-step apporach to prioritize project requirements and help stakeholders reach mutual understanding on project delivery <a class="citation" href="#moscow_model">(“Master User Requirements with Moscow Prioritization Model,” 2023)</a>. It comprises four categories:</p>
+
+<ul>
+  <li>M - Must have: Non-negotiable product requirements that are required for the product to be successful</li>
+  <li>S - Should have: Attributes with significant value that would be good to implement</li>
+  <li>C - Could have: Desired requirements that can be implemented but have smaller impact when left out</li>
+  <li>W - Won’t have: Requirements identified as non-priority</li>
+</ul>
+
+<p>Below, we are addressing the first three categories as identified more important and due to the project’s orientation and time constraints.</p>
+
+<h2 id="must-have-quality-attributes">Must-have Quality Attributes</h2>
+
+<h3 id="m1-reliability">M.1 Reliability</h3>
+
+<p>A stable and reliable system guarantees that the NS system operates as planned, with no crashes or unexpected downtime. For a transportation service provider like NS, stability is critical since any disruption in operation can result in severe delays, cancellations, and annoyance for customers. A reliable system also prevents data loss and allows transactions to be executed without mistakes. Thus, the acceptable values for MTBF, MTTR, MTTA, and MTTF for NS are the following:</p>
+
+<ul>
+  <li>
+    <p>MTBF (Mean Time Between Failures): The MTBF should be high, suggesting that the system is dependable and does not suffer from frequent outages. A reasonable target is at least 99.9% uptime (MTBF = ~8,760 hours per year)</p>
+  </li>
+  <li>
+    <p>MTTR (Mean Time To Repair): The MTTR should be low, demonstrating that system problems are resolved promptly. The goal value is less than 1 hour.</p>
+  </li>
+  <li>
+    <p>MTTA (Mean Time To Acknowledge): The MTTA should be low, indicating that any issues with the system are acknowledged timely. A value of less than 10 minutes is desirable.</p>
+  </li>
+  <li>
+    <p>MTTF (Mean Time To Failure): The MTTF should be high, suggesting that the system is designed to work without experiencing critical issues for a long amount of time. We set the MTTF to 5 years.</p>
+  </li>
+</ul>
+
+<h3 id="m2-availability">M.2 Availability</h3>
+
+<p>Trains are operating throughout the country 24/7. Thus, there is a need for the system to always remain operational and available to users. Delays or service disruptions cause discomfort and financial loss to the company and harm customer satisfaction. According to the acceptable values we calculated before, the availability is the following:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>MTTF = 5 years x  8,760 hours per year  = 43,800 hours
+MTTR = 1 hour
+Availability = MTTF / (MTTF + MTTR) = 43,800 / (43,800 + 1) = 0.9999771
+Downtime = MTTR / (MTTF + MTTR) = 1 / (43,800 + 1) = 0.0000229
+</code></pre></div></div>
+
+<p>Therefore, the availability of the system is approximately 99.99771% and a downtime of about 31 minutes per year.</p>
+
+<h3 id="m3-security">M.3 Security</h3>
+
+<p>Identity and Access Management</p>
+
+<ul>
+  <li>
+    <p>Authentication: The system should authenticate users and guarantee that sensitive information is only accessible to authorized users. System should enforce secure login methods for customers/passengers who access the NS website using HTTPS and SSL/TLS protocols. The system should enforce multi-factor authentication (MFA) and access control for all the employees and external users of the system (contractors etc.) who access back-end services.</p>
+  </li>
+  <li>
+    <p>Authorization: A role-based access control (RBAC) system is proposed for authorization purposes. Users should only be able to perform activities permitted according to their role or permission level. The system uses JSON Web Tokens for user authorisation. Employees access the various sub-systems using Single Sign-On (SSO).</p>
+  </li>
+</ul>
+
+<p>CIA Triad (Confidentiality, Integrity, Availability)</p>
+
+<ul>
+  <li>
+    <p>Confidentiality: The system should protect sensitive data, including personal data, transaction records and financial information using encryption. Also, the users’ passwords should be stored in a hashed format</p>
+  </li>
+  <li>
+    <p>Integrity: the system should prevent unauthorized users or processes from altering or corrupting data by validating data and using version control</p>
+  </li>
+  <li>
+    <p>Availability: The system must guarantee that users may always access it. The system should be protected sufficiently against (Distributed) Denial of Service attacks (DDoS)</p>
+  </li>
+</ul>
+
+<h3 id="m4-scalability">M.4 Scalability</h3>
+
+<p>Given the increasing tends in the country’s population <a class="citation" href="#statistics">(CBS, 2023)</a> as well as the establishment of the pre-covid touristic flow, the NS system is required to be scalable in order to meet the customer needs. Scalability is significant to ensure that the system can manage bigger amounts of data and higher user demand in the future. We describe scalability in two axes:</p>
+
+<ul>
+  <li>
+    <p>Horizontal scalability: refers to the system’s ability to handle an increasing number of client requests (throughput), amount of data (input/output) and number of users (concurrency)</p>
+  </li>
+  <li>
+    <p>Vertical scalability: refers to system’s ability to handle and increasing workload in terms of amount of nodes (network size) and software components (system size)</p>
+  </li>
+</ul>
+
+<h2 id="should-have-quality-attributes">Should-have Quality Attributes</h2>
+
+<h3 id="s1-performance">S.1 Performance</h3>
+
+<ul>
+  <li>
+    <p>Latency/Response time: For each kind of transaction or request, the system should reply timely to user input while maintaining an acceptable latency. However, latency acceptable standards are different for each component of the railway system. Critical systems of the NS infrastructure such as the European Rail Traffic Management System (ERTMS) <a class="citation" href="#nsertms">(NS, 2022)</a> which guarantees the railway safety require low latency, in milliseconds or even microseconds. On the other hand, for less critical components such as the passenger journey planner or the personal details update system, the latency can be in a range of seconds.</p>
+  </li>
+  <li>
+    <p>Throughput: The system should be able to accommodate a large number of concurrent users or transactions without performance deterioration or downtime. The system, for example, should be able to withstand high traffic periods without slowing down or failing.</p>
+  </li>
+</ul>
+
+<h3 id="s2-compatibility-external-dependencies">S.2 Compatibility (External Dependencies)</h3>
+
+<ul>
+  <li>
+    <p>Portability: The cost of porting is less than the cost rewriting. A “Write Once, Compile/Run/Test Anywhere” approach reduces the costs of rewriting the whole product and, therefore, increases portability. The system should be able to operate across a variety of platforms, including those of various operating systems and devices without requiring substantial alterations or changes</p>
+  </li>
+  <li>Interoperability: The system interoperates with various external systems such as:
+    <ul>
+      <li>Payment gateway of bank and payment vendors</li>
+      <li>API of OV-Chipkaart system</li>
+      <li>API of Google Maps or Open Street Maps</li>
+      <li>API of other (national or international) public transport systems (e.g., arriva, breng, keolis, qbuzz)</li>
+    </ul>
+  </li>
+  <li>Ease of Integration: The system should facilitate integration by exposing a real-time point-to-point API rendering XML or JSON data.</li>
+</ul>
+
+<h3 id="s3-usability">S.3 Usability</h3>
+
+<p>Usability ensures that user interfaces are designed in a friendly and convenient use. Based on the Usability’s definition of the ISO/DIS 9241-11 standard (“Ergonomics of human-system interaction — Part 11: Usability: Definitions and concepts”) <a class="citation" href="#usability"></a>, our system aims at the following attributes:</p>
+
+<ul>
+  <li>Effectiveness: “accuracy and completeness with which users achieve specified goals”</li>
+  <li>Efficiency: “resources used in relation to the results achieved”</li>
+  <li>Satisfaction: “extent to which the user’s physical, cognitive and emotional responses that result from the use of a system, product or service meet the user’s needs and expectations”</li>
+</ul>
+
+<p>Furthermore, to improve Usability and the User Interface, it is important that our system takes into consideration the “10 usability heuristics for User Interface design” proposed by Nielsen <a class="citation" href="#nielsen">(in Research-Based User Experience, n.d.)</a>.</p>
+
+<ol>
+  <li>Visibility of system status: the system should inform the user what is happening</li>
+  <li>Match between system and the real world: the system should use real world and train operation-related language</li>
+  <li>User control and freedom: the system should allow users leave unwanted actions and processes.</li>
+  <li>Consistency and standards: the system should be consistent and leave no space for ambiguation.</li>
+  <li>Error prevention: the system should try to eliminate the possibility of an error and prevent problems</li>
+  <li>Recognition rather than recall: the system should minimize the user’s memory load by making components and options easily recallable and visible</li>
+  <li>Flexibility and efficiency of use: the system should allow flexible processes to be carried out in multiple ways to allow efficiency of use</li>
+  <li>Help users recognize, diagnose, and recover from errors: the system should display meaningful errors guiding the users in plain language</li>
+  <li>Aesthetic and minimalist design: Interfaces should contain only the necessary and relevant information</li>
+  <li>Help and documentation: Documentation helps sometimes users understand and complete their goals</li>
+</ol>
+
+<p>Many of the heuristics express essentially the same concepts as the Ease of Support, Consistency, Clarity, Simplicity of Pautasso’s quality attributes <a class="citation" href="#pautasso">(Pautasso, 2020)</a>. In addition, the system should implement one more quality attribute, Accessibility: The Netherlands has adopted the Web Content Accessibility Guidelines (WCAG) as part of its legislation; hence, the system should be accessible to users with disabilities.</p>
+
+<h3 id="s4-maintainability">S.4 Maintainability</h3>
+
+<p>Our goal is to keep the same quality over time. Hence, the system should focus on the ‘low coupling, high cohesion’ principle to allow adaptive and corrective maintenance. The adaptive maintenance refers to the system’s ability to upgrade dependencies, install successfully new security patches and comply with new regulation. The corrective maintenance refers to the system’s ability to allow bug fixing and defect removal.</p>
+
+<h3 id="s5-privacy">S.5 Privacy</h3>
+
+<p>The system should adopt privacy-by design concepts { % cite schaar_2010 %} from an early stage to guarantee that privacy is integrated into system design and development (e.g., data protection impact assessments, privacy risk management, and privacy-enhancing technology). The system should only gather the information that is necessary from users, and it should do so in a transparent, lawful, and user-informed manner. User data should be processed exclusively for the purposes for which they were acquired. Only authorized parties should have access to user data. The system should safeguard user data against unauthorized access, disclosure, or alteration and should guarantee that data security is commensurate to the data’s sensitivity and risk level. The system should respect user rights according to the EU GDPR regulation, including the ability to access, correct and erase data.</p>
+
+<h2 id="could-have-quality-attributes">Could-have Quality Attributes</h2>
+
+<h3 id="c1-modularity">C.1 Modularity</h3>
+
+<p>The system should be divided into more manageable, independent modules or components that may be created, tested, deployed, and maintained independently (e.g., ticket buying, train schedules, real-time train information, and customer service). Modularity as an enabler for other quality attributes such as flexibility, scalability and, maintainability.</p>
+
+<h3 id="c2-composability">C.2 Composability</h3>
+
+<p>The system should allow composability and putting all the developed components together should be easy and fast. Each component can be composed differently without affecting the rest of the components and it should not require much time and effort to replace existing components.</p>
+
+<h3 id="c3-durability">C.3 Durability</h3>
+
+<p>The system should be able to store the customer and personnel data in a persistence layer for an extended period due to compliance and auditing constraints. It should also demonstrate a backup a disaster recovery ability.</p>
+
+<h3 id="c4-flexibility">C.4 Flexibility</h3>
+
+<ul>
+  <li>
+    <p>Configurability: Since the product is large, we cannot rely on hard-coded parameters which require rebuild to change. The system should have documented configuration options and allow startup parameters (restart needed to apply changes)</p>
+  </li>
+  <li>
+    <p>Extensibility: The system should allow new functionalities to be deployed without affecting the correct operation of other features and the system in general</p>
+  </li>
+  <li>
+    <p>Modifiability: The system should allow existing functionalities to be changed or removed without affecting the correct operation of other features and the system in general</p>
+  </li>
+</ul>
+
+<p>Both Extensibility and Modifiability are related to the adaptive and corrective maintainability attributes of the system.</p>
+
+<h3 id="c5-deployability">C.5 Deployability</h3>
+
+<p>System modifications should be securely and swiftly deployed into production without affecting the essential system’s availability. The deployment procedure should involve continuous integration and continuous delivery (CI/CD) to incorporate automated testing and validation. However, since the system is part of a railway service, the deployment process should not be fully automated and sign-offs should be in place before deploying to the production environment. The deployments should be launched during off-peak (night) hours with planned or no downtime and rollback should be possible.</p>
+
+<ol class="bibliography"><li><span id="sommerville">Sommerville, I. (2010). <i>Software Engineering</i> (9th ed.). Addison-Wesley.</span></li>
+<li><span id="moscow_model">Master user requirements with moscow prioritization model. (2023). In <i>StoriesOnBoard Blog</i>. https://storiesonboard.com/blog/moscow-prioritization-model</span></li>
+<li><span id="statistics">CBS. (2023). Population growth. In <i>Statistics Netherlands</i>. https://www.cbs.nl/en-gb/visualisations/dashboard-population/population-dynamics/population-growth</span></li>
+<li><span id="nsertms">NS. (2022). In <i>NS start met Implementatie Nieuw beveiligingssysteem treinen</i>. Nederlandse Spoorwegen. https://nieuws.ns.nl/ns-start-met-implementatie-nieuw-beveiligingssysteem-treinen/</span></li>
+<li><span id="usability">In <i>Ergonomics of human-system interaction - Part 11: Usability: Definitions and concepts</i>. ISO 9241-11:2018(en). https://kebs.isolutions.iso.org/obp/ui#!iso:std:iso:9241:-11:ed-2:v1:en</span></li>
+<li><span id="nielsen">in Research-Based User Experience, W. L. 10 usability heuristics for user interface design. In <i>Nielsen Norman Group</i>. https://www.nngroup.com/articles/ten-usability-heuristics/</span></li>
+<li><span id="pautasso">Pautasso, C. (2020). <i>Software Architecture: visual lecture notes</i>. LeanPub. https://leanpub.com/software-architecture/</span></li></ol>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">NS System Design - Software Architecture IN4315</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">NS System Design - Software Architecture IN4315</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

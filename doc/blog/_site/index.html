@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>NS System Design - Software Architecture IN4315 | The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="NS System Design - Software Architecture IN4315" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<meta property="og:description" content="The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project." />
+<link rel="canonical" href="http://localhost:4000/" />
+<meta property="og:url" content="http://localhost:4000/" />
+<meta property="og:site_name" content="NS System Design - Software Architecture IN4315" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="NS System Design - Software Architecture IN4315" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","description":"The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.","headline":"NS System Design - Software Architecture IN4315","name":"NS System Design - Software Architecture IN4315","url":"http://localhost:4000/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="NS System Design - Software Architecture IN4315" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">NS System Design - Software Architecture IN4315</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/accountability/">Accountability</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <div class="home"><div style="text-align: justify">
+
+  <h2>1. Introduction</h2>
+
+  <h3 id="thenssystem">The NS system</h3>
+  <p>This Software Architecture project studies the NS (Nederlandse Spoorwegen) system. </p>
+  <p>As a complex construction with multiple sub-systems, NS presents an intriguing and challenging subject for software
+    architecture research. The system offers various functionalities, including ticket buying, train schedules,
+    real-time train information, and customer service, all of which rely on a sophisticated software architecture.
+    Furthermore, NS has a widely used website in the Netherlands and its quality attributes such as performance,
+    scalability, and reliability are essential to people who commute every day. Analyzing the software architecture of
+    NS can provide valuable insights into how large-scale, real-world systems design, development, and maintenance.</p>
+
+  <h3 id="pyramidstructure">Our solution</h3>
+  <p>Having identified availability, reliability, security, and scalability as our key performance indicators (KPIs) we
+    present and elaborate on our proposed solution for NS, Space-based architecture (SBA). This design method organizes the
+    system around isolated and independent functional nodes — “spaces” — which have their own logic, data, and interface
+    <a class="citation" href="#sba_general">(“Software Architecture Patterns: Space-Based Architecture,” 2023)</a>. We argue that SBA satisfies the domain analysis, solves the design problem, implements our
+    architectural description, outweighs alternative architectures, and is doable. Lastly, we present a proof of concept
+    that confirms our argumentation. </p>
+  <p><a href="/appendices/design/space-based/Space-based.png"><img src="/appendices/design/space-based/Space-based.png" alt="Train Management vertical Space-Based Architecture design image." /></a></p>
+
+  <h2 id="pyramid">2. McKinsey's Pyramid Structure</h2>
+
+  <p>This essay follows McKinsey's pyramid structure. The diagram serves as a Table of Contents and as a guide to
+    present our argumentation and the different architecture sections the user.</p>
+
+  <p>Each tab is clickable (for child nodes, expand first the relevant section below). We encourage users to start
+    reading directly Chapters 3-7 and refer to the diagram when they finish, in order to have a better overview of the
+    content.</p>
+
+  <link rel="stylesheet" href="/assets/styles/pyramid.css" />
+  <div class="container">
+    <!-- Chart goes here -->
+    <h3 class="level-1 rectangle">Space-Based Architecture</h3>
+    <ol class="level-2-wrapper" style="list-style: none">
+      <li>
+        <h4 class="level-2 rectangle"><a href="#domain_analysis">Satisfies Domain Analysis</a></h4>
+        <ol class="level-3-wrapper" style="list-style: none">
+          <li>
+            <h5 class="level-3 rectangle"><a href="#stakeholder_analysis">Stakeholder Analysis</a></h5>
+          </li>
+          <li>
+            <h5 class="level-3 rectangle"><a href="#kpi">KPIs</a></h5>
+          </li>
+          <li>
+            <h5 class="level-3 rectangle"><a href="#functional_req">Functional Requirements</a></h5>
+          </li>
+          <li>
+            <h5 class="level-3 rectangle"><a href="#non_functional">Non-Functional Requirements</a></h5>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <h4 class="level-2 rectangle"><a href="#solves_design_problem">Solves Design Problem</a></h4>
+        <ol class="level-3-wrapper" style="list-style: none">
+          <li>
+            <h5 class="level-3 rectangle"><a href="#design_problem">Design Problem</a></h5>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <h4 class="level-2 rectangle"><a href="#arch_desc">Implements Architectural Description</a></h4>
+        <ol class="level-3-wrapper" style="list-style: none">
+          <li>
+            <h5 class="level-3 rectangle"><a href="#system_design">System Design</a></h5>
+          </li>
+          <li>
+            <h5 class="level-3 rectangle"><a href="#c4_model">C4 Model</a></h5>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <h4 class="level-2 rectangle"><a href="#alternatives">Outweighs Alternative Architectures</a></h4>
+        <ol class="level-3-wrapper" style="list-style: none">
+          <li>
+            <h5 class="level-3 rectangle"><a href="#microservices">Microservices</a></h5>
+          </li>
+          <li>
+            <h5 class="level-3 rectangle"><a href="#event_bus">Event-Bus</a></h5>
+          </li>
+          <li>
+            <h5 class="level-3 rectangle"><a href="#n_tier">N-Tier</a></h5>
+          </li>
+          <li>
+            <h5 class="level-3 rectangle"><a href="#space_based">Space-Based</a></h5>
+          </li>
+        </ol>
+      </li>
+      <li>
+        <h4 class="level-2 rectangle"><a href="#achievable">It is Achievable</a></h4>
+        <ol class="level-3-wrapper" style="list-style: none">
+          <li>
+            <h5 class="level-3 rectangle"><a href="#poc">POC</a></h5>
+          </li>
+          <li>
+            <h5 class="level-3 rectangle"><a href="#demo">Demo</a></h5>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </div>
+
+  <p>Click to expand each section: </p>
+
+  <!-- DOMAIN ANALYSIS -->
+
+  <button type="button" class="collapsible" id="domain_analysis">3. Space-Based Architecture satisfies Domain
+    Analysis</button>
+  <div class="content">
+
+    <h2 id="stakeholder_analysis">3.1. Stakeholders Analysis</h2>
+
+    <p>This section identifies all stakeholders who interact with the NS System. We can separate them in three groups.
+      Those working on the system, those using the system, those unrelated to the system but able to influence it.
+      <!-- All stakeholders will be put into one of these groups and will have a small summary of what they represent in regard to the project.  -->
+    </p>
+    <h3 id="workersonthesystem">Workers on the system</h3>
+    <ul>
+      <li>Project teams — The NS system is large and needs multiple project teams, it is important that the system
+        allows for multiple teams to work together properly and effectively.</li>
+      <li>DevOps teams — The system has to run somewhere, it is necessary to take the limitations and possibilities into
+        account by the DevOps teams.</li>
+      <li>Support teams — Giving support happens even in physical locations, allowing these teams to work effectively
+        and forward feedback properly to development allows for iteratively creating a better system.</li>
+      <li>Third parties — There are third parties that interact with our system API's highlighting the demand for
+        compatibility and specific system functionality. Updates need to be done in such a way that third parties can
+        also update their systems in a reasonable time frame.</li>
+    </ul>
+    <h3 id="userscustomersofthesystem">Users/Customers of the system</h3>
+    <ul>
+      <li>Travelers/Customers — Main stakeholders and daily users of the system. Passengers' opinions are important for
+        improving, extending and correcting the system and thus their preferences should be taken into consideration.
+      </li>
+      <li>Train Employees — People working on the trains also use multiple parts of the system, and part of it overlaps
+        with the travelers. Keeping the employees happy is also important, without them there are no trains after all.
+      </li>
+      <li>Schedulers — Scheduling trains and making sure there are enough employees to man them is a difficult task, and
+        their input is important for the whole system. And because the job is difficult, improving their workflow and
+        efficiency would be a boon for the company as a whole.</li>
+      <li>Accounting — This is a predictable stakeholder as well, managing finances is important after all. But they
+        also interact with the schedules of employees, this is to record worked hours of employees correctly.</li>
+    </ul>
+    <h3 id="entitieswithpoweroverthesystem">Entities with power over the system</h3>
+    <ul>
+      <li>Management — They work for success of the system aiming to deliver high quality and usable products.
+        Malfunctioning or bad products would be reflecting badly on their governing which could result in penalties to
+        the teams working on the system.</li>
+      <li>NS Shareholders (Rijksoverheid) <a class="citation" href="#dutch_railways">(“Organisation of Corporate Governance at NS,” 2023)</a> — In the event that the system designed behaves in
+        an unwanted way, the government could step in and penalize the NS. Likely scenarios for this to happen, could
+        be when designing an unfair system or a system that barely functions. </li>
+      <li>App Store (Apple) / Google Play — Publishing apps to the respective app stores requires that the system is
+        compliant with the Terms of service (ToS) of these stores.</li>
+    </ul>
+
+    <h2 id="kpi">3.2. KPIs</h2>
+
+    <h3 id="keyperformanceindicatorskpis">Key Performance Indicators (KPIs)</h3>
+    <p>Below, we present the Key Performance Indicators (KPIs) for the system. Without these definitions it will be hard
+      to measure the successfulness the implemented Proof-Of-Concept (PoC) and the project as a whole:</p>
+    <ul>
+      <li>
+        <p>Stability: A stable system guarantees that the NS system operates as planned, with no crashes or unexpected
+          downtime. For a transportation service provider like NS, stability is critical since any disruption in
+          operation can result in severe delays, cancellations, and annoyance for customers. A reliable system also
+          prevents data loss and allows transactions to be executed without mistakes</p>
+      </li>
+      <li>
+        <p>Scalability: Given the increasing trends in the country's population <a class="citation" href="#statistics">(CBS, 2023)</a> as well as the
+          rise of the pre-covid touristic flow, the NS system needs to scale in order to meet
+          customer needs. As NS’s customer base grows, the system should be in a position to handle increased traffic
+          and workload. Scalability is significant to ensure that the system does not get overcrowded or delayed and
+          that users have easy access to the service</p>
+      </li>
+      <li>
+        <p>Security: NS handles sensitive customer information, financial data and passenger travel plans. Therefore, a
+          potential security breach could harm both customers and the company (in terms of heavy fines, reputational
+          damage etc.). Moreover, NS comprises several Industrial Control Systems (ICS) which ensure the operation of
+          the network. Security breaches on these systems could be detrimental on a national scale. Furthermore,
+          “transport of persons and goods by (main) railway infrastructure” is considered a critical process of
+          category-B and a part of the critical infrastructure of the Netherlands <a class="citation" href="#critical">(van Justitie en Veiligheid, 2022)</a></p>
+      </li>
+      <li>
+        <p>Availability: Trains are operationg throughout the country almost 24/7. Thus, there is a need for the system
+          to remain operational and available to users at all times. Delays or service disruptions cause discomfort and
+          financial loss to the company and harm customer satisfaction</p>
+      </li>
+    </ul>
+
+
+    <h2 id="functional_req">3.3. Functional Requirements</h2>
+
+  <h3 id="introduction">Introduction</h3>
+  <!-- <p>Before diving into functional requirements, it is very important to understand the user’s needs and requirements i.e., user stories. The success of a software system depends on how well it satisfies the user stories, and architects must prioritize user satisfaction throughout the development process <a class="citation" href="#chopade2017agile">(Chopade &amp; Dhavase, 2017)</a>.</p> -->
+  <h4 id="1userstoriesforthenssystem">1. User Stories for the NS system</h4>
+  <p>The success of a software system depends on how well it satisfies the user stories <a class="citation" href="#chopade2017agile">(Chopade &amp; Dhavase, 2017)</a>. Read the User Stories in the Appendix.</p>
+  
+  <h3 id="2scenarios">2. Scenarios</h3>
+  <h4 id="nowletslookatsomescenariosofhowthenssystemwillbeused">Now, let’s look at some scenarios of how the NS System will be used.</h4>
+  <ol>
+    <li><p>Tickets Purchasing: Passengers purchase tickets for train journeys on selected dates and times. </p></li>
+    <li><p>Real-Time information: Passengers access real-time information about train schedules, delays, and cancellations through digital displays at train stations, the ns.nl app, or the ns.nl website. The system also provides information about train connections, platform numbers, and seat availability to help passengers plan their journeys.</p></li>
+    <li><p>Trip Planning: The real-time information provided by the system helps passengers plan their trip accordingly, without any disruptions.</p></li>
+    <li><p>Customer Service: Customer service representatives assist passengers with their queries and complaints. The system allows representatives to access passenger information, such as ticket purchases and journey history, to provide personalized assistance. </p></li>
+    <li><p>Subscriptions: The system offers various subscriptions during off-peak hours, peak hours, group discounts, etc. People who travel often in trains buy these subscriptions.</p></li>
+    <li><p>Maintenance Team: The system tracks the condition of trains, signals, and tracks to identify any issues that may affect train operations. Maintenance crews use this information to schedule maintenance activities, such as inspections and repairs, to minimize downtime and ensure safe and reliable train service.</p></li>
+  </ol>
+  <h3 id="3sequentialdiagrams">3. Sequential Diagrams</h3>
+  <h3 id="31purchasingatrainticket">3.1 Purchasing a train ticket</h3>
+  <p><img src="/assets/SeqDiag1.png" alt="Purchasing a train ticket" title="Purchasing a train ticket" /></p>
+  <h4 id="311actors">3.1.1 Actors:</h4>
+  <ol>
+    <li><p>Traveller</p></li>
+    <li><p>Payment Processor</p></li>
+    <li><p>Train Database</p></li>
+    <li><p>NS System</p></li>
+  </ol>
+  <h4 id="312events">3.1.2 Events:</h4>
+  <ol>
+    <li><p>User selects the desired train journey and ticket type in the ns.nl app.</p></li>
+    <li><p>The app sends a request to the Train Database for availability and pricing information.</p></li>
+    <li><p>The Train Database responds with the availability and pricing information for the selected journey and ticket type.</p></li>
+    <li><p>The app presents the user with the availability and pricing information.</p></li>
+    <li><p>The user selects a ticket and enters their payment information.</p></li>
+    <li><p>The app sends a request to the Payment Processor to process the payment.</p></li>
+    <li><p>The Payment Processor responds with a confirmation of the payment.</p></li>
+    <li><p>The app sends a request to the Train Database to reserve the ticket for the user.</p></li>
+    <li><p>The Train Database confirms the ticket reservation and sends a confirmation to the app.</p></li>
+    <li><p>The app presents the user with the ticket confirmation and travel details.</p></li>
+  </ol>
+  <h3 id="32customerservice">3.2 Customer Service</h3>
+  <p><img src="/assets/SeqDiag2.png" alt="Customer Service" title="Customer Service" /></p>
+  <h4 id="321actors">3.2.1 Actors</h4>
+  <ol>
+    <li><p>User</p></li>
+    <li><p>Customer Service Representative</p></li>
+    <li><p>Train Database</p></li>
+    <li><p>NS System</p></li>
+  </ol>
+  <h4 id="322events">3.2.2 Events</h4>
+  <ol>
+    <li><p>User contacts Customer Service through the ns.nl app or website.</p></li>
+    <li><p>The app or website connects the user with a Customer Service Representative.</p></li>
+    <li><p>The Customer Service Representative requests the user's booking details and issue description.</p></li>
+    <li><p>The app sends a request to the Train Database for the user's booking details.</p></li>
+    <li><p>The Train Database responds with the user's booking details.</p></li>
+    <li><p>The Customer Service Representative assists the user with their issue, which may include changing or cancelling a booking, providing travel information, or addressing a complaint.</p></li>
+    <li><p>The Customer Service Representative updates the user's booking details in the Train Database as necessary.</p></li>
+    <li><p>The app displays the updated booking details and resolution to the user.</p></li>
+  </ol>
+  <h3 id="4functionalrequirements">4. Functional Requirements</h3>
+  <p>According to Pautasso <a class="citation" href="#pautasso">(Pautasso, 2020)</a> , functional requirements need to be correct, complete and compliant. This framework is used to identify the functional requirements of the NS system.</p>
+  <p><strong>1. Administrator:</strong></p>
+  <ul>
+    <li><p>User Management: The system should have a user management module that allows users to create an account, sign in, and manage their profile. The module should also provide role-based access control for different types of users, such as passengers, employees, and administrators.</p></li>
+    <li><p>Train Management: The system should have a train management module that allows administrators to manage the train schedules, assign routes, and track train locations. The module should also provide a real-time dashboard for administrators to monitor train status and resolve any issues that arise.</p></li>
+  </ul>
+  <p><strong>2. Train Scheduling and Management:</strong></p>
+  <ul>
+    <li><p>Train schedule management: The train scheduler needs to have access to a user-friendly system that enables them to create, manage and update train schedules. This system should allow the scheduler to assign trains to specific routes, determine departure and arrival times, and adjust schedules in real time if necessary.</p></li>
+    <li><p>Train capacity planning: The scheduling team should be able to monitor and manage the capacity of each train, ensuring that the number of seats available is sufficient to meet demand. The system should provide information on the number of passengers expected on each train and allow the scheduler to adjust capacity as needed.</p></li>
+    <li><p>Route optimization: The scheduler should have access to a system that enables them to optimize train routes to ensure the most efficient use of resources. The system should consider factors such as travel time, distance, and passenger demand to create the most efficient and cost-effective route.</p></li>
+    <li><p>Communication with other departments: The scheduler should be able to communicate effectively with other departments, such as maintenance and operations, to ensure that all necessary resources are available to operate each train. The system should provide a communication platform to facilitate coordination and collaboration between departments.</p></li>
+    <li><p>Real-Time information: The scheduler should have access to a system that allows them to manage train delays efficiently. This system should enable the scheduler to track train performance in real time, provide updated arrival and departure times to passengers, and make necessary adjustments to the schedule to minimize the impact of delays.</p></li>
+    <li><p>Reporting and analysis: The scheduler should have access to a system that provides comprehensive reporting and analysis capabilities. The system should generate reports on train performance, passenger demand, and other key metrics to enable the scheduler to make data-driven decisions.</p></li>
+  </ul>
+  <p><strong>3. Train Conductor:</strong></p>
+  <ul>
+    <li><p>Passenger management: This functionality allows conductors to manage passenger reservations, check and validate passenger tickets, and assist with boarding passengers.</p></li>
+    <li><p>Ticket validation: This functionality enables conductors to scan or validate tickets using mobile devices or onboard ticket machines and identify invalid or fraudulent tickets.</p></li>
+    <li><p>Onboard announcements: This functionality enables conductors to make important announcements to passengers, such as schedule changes, route information, and safety instructions.</p></li>
+  </ul>
+  <p><strong>4. Accounting:</strong></p>
+  <ul>
+    <li><p>Statistics and reporting: This functionality enables the management crew to track key performance indicators (KPIs), generate reports on revenue and costs, and analyse customer feedback and satisfaction.</p></li>
+    <li><p>Inventory management: This  enables the crew to manage inventory levels of key resources like trains, fuel, and maintenance equipment, and ensure that sufficient resources are available to meet customer demand.</p></li>
+  </ul>
+  <p><strong>5. Ticket Purchasing System:</strong> The system should have a ticketing system that allows users to purchase tickets for trains, view their train schedules, and track their train status. The module should also provide an option for users to cancel or modify their tickets. It should also store customer travel and booking data for future reference.</p>
+  <p><strong>6. Customer Service:</strong> The system should provide excellent customer service to passengers. The system should have trained staff, clear communication channels, and customer feedback mechanisms in place to ensure that passengers are satisfied with the services. The module should also provide an option for users to contact customer support through different channels such as email, phone, and chat.</p>
+  <p><strong>7. Payment Gateway:</strong> The system should have a payment gateway module that allows users to pay for their tickets securely using different payment methods such as credit/debit cards, mobile wallets, and net banking. It should also process customer payments securely and efficiently.</p>
+  <p><strong>8. Functional Behaviour:</strong> The system should handle invalid customer inputs, such as incorrect booking details or payment information, and provide appropriate error messages to the user. The system should also handle system errors, such as server downtime or network connectivity issues, and provide appropriate feedback to the user.</p>
+
+
+    <h2 id="non_functional">3.4. Non-Functional Requirements</h2>
+
+  <h3 id="introduction">Introduction</h3>
+  <p>Non-functional requirements are used to describe the intended properties or features of the software system and give direction to the software architects on how to develop the system to fulfil the specified quality attributes. They aid in managing trade-offs between competing quality criteria and arranging the design selections in a more effective order. They provide stakeholders a consistent vocabulary to use when discussing the intended behavior of the system. We define our requirements based on Pautasso's <a class="citation" href="#pautasso">(Pautasso, 2020)</a> and Sommerville’s <a class="citation" href="#sommerville">(Sommerville, 2010)</a> approach. </p>
+  <!-- <p>Before designing our system, we studied both Pautasso's <a class="citation" href="#pautasso">(Pautasso, 2020)</a> and Sommerville’s <a class="citation" href="#sommerville">(Sommerville, 2010)</a> approaches. For the purposes of this course, we follow Pautasso’s approach categorizing the non-functional requirements to internal/external and static/dynamic and, therefore, we have 5 different categories: Design, Normal Operation, Dependability, Security, Long Term Qualities.</p> -->
+   <p><img src="/assets/sommerville-qualities.png" alt="Non-functional requirements according to Sommerville." title="Non-functional requirements according to Sommerville" /></p>
+  <p><img src="/assets/pautasso-qualities.png" alt="Non-functional (or Extra-functional according to the recent version) requirements according to Pautasso." title="Non-functional requirements according to Pautasso" /></p>  <p>Our analysis uses the MoSCoW method, which is a four-step apporach to prioritize project requirements and help stakeholders reach mutual understanding on project delivery <a class="citation" href="#moscow_model">(“Master User Requirements with Moscow Prioritization Model,” 2023)</a>. It comprises four categories: </p>
+  <ul>
+    <li>M - Must have: Non-negotiable product requirements that are required for the product to be successful</li>
+    <li>S - Should have: Attributes with significant value that would be good to implement </li>
+    <li>C - Could have: Desired requirements that can be implemented but have smaller impact when left out</li>
+    <li>W - Won't have: Requirements identified as non-priority</li>
+  </ul>
+  <p>Below, we are addressing the first three categories, identified as more important and due to the project's orientation.</p>
+  <h3 id="musthavequalityattributes">Must-have Quality Attributes</h3>
+  <p><strong>M.1 Reliability</strong></p>
+<p>For a transportation service provider like NS, stability is critical since any disruption in operation can result in severe delays, cancellations, and annoyance for customers. A reliable system also prevents data loss and allows transactions to be executed without mistakes. Thus, the acceptable values for MTBF, MTTR, MTTA, and MTTF for NS are the following:</p>
+  <ul>
+    <li><p>MTBF (Mean Time Between Failures): The MTBF should be high, suggesting that the system is dependable and does not suffer from frequent outages. A reasonable target is at least 99.9% uptime (MTBF = ~8,760 hours per year)</p></li>
+    <li><p>MTTR (Mean Time To Repair): The MTTR should be low, demonstrating that system problems are resolved promptly. The goal value is less than 1 hour.</p></li>
+    <li><p>MTTA (Mean Time To Acknowledge): The MTTA should be low, indicating that any issues with the system are acknowledged timely. A value of less than 10 minutes is desirable.</p></li>
+    <li><p>MTTF (Mean Time To Failure): The MTTF should be high, suggesting that the system is designed to work without experiencing critical issues for a long amount of time. We set the MTTF to 5 years.</p></li>
+  </ul>
+  <!-- <h4 id="m2availability">M.2 Availability</h4> -->
+  <p><strong>M.2 Availability</strong></p>
+  <p>Trains are operating throughout the country 24/7. Thus, there is a need for the system to always remain operational and available to users. Delays or service disruptions cause discomfort and financial loss to the company and harm customer satisfaction. According to the acceptable values we calculated before, the availability is the following:</p>
+  <pre><code>MTTF = 5 years x  8,760 hours per year  = 43,800 hours MTTR = 1 hour Availability = MTTF / (MTTF + MTTR) = 43,800 / (43,800 + 1) = 0.9999771 Downtime = MTTR / (MTTF + MTTR) = 1 / (43,800 + 1) = 0.0000229</code></pre>
+  <p>Therefore, the availability of the system is approximately 99.99771% and a downtime of about 31 minutes per year.</p>
+  <!-- <h4 id="m3security">M.3 Security</h4> -->
+  <p><strong>M.3 Security</strong></p>
+  <p>Identity and Access Management</p>
+  <ul>
+    <li><p>Authentication: The system should authenticate users and guarantee that sensitive information is only accessible to authorized users. System should enforce secure login methods for customers/passengers who access the NS website using HTTPS and SSL/TLS protocols. The system should enforce multi-factor authentication (MFA) and access control for all the employees and external users of the system (contractors etc.) who access back-end services.</p></li>
+    <li><p>Authorization: A role-based access control (RBAC) system is proposed for authorization purposes. Users should only be able to perform activities permitted according to their role or permission level. The system uses JSON Web Tokens for user authorisation. Employees access the various sub-systems using Single Sign-On (SSO).</p></li>
+  </ul>
+  <p>CIA Triad (Confidentiality, Integrity, Availability)</p>
+  <ul>
+    <li><p>Confidentiality: The system should protect sensitive data, including personal data, transaction records and financial information using encryption. Also, the users’ passwords should be stored in a hashed format</p></li>
+    <li><p>Integrity: the system should prevent unauthorized users or processes from altering or corrupting data by validating data and using version control</p></li>
+    <li><p>Availability: The system must guarantee that users may always access it. The system should be protected sufficiently against (Distributed) Denial of Service attacks (DDoS)</p></li>
+  </ul>
+  <!-- <h4 id="m4scalability">M.4 Scalability</h4> -->
+  <p><strong>M.4 Scalability</strong></p>
+  <p>Given the increasing tends in the country’s population <a class="citation" href="#statistics">(CBS, 2023)</a> as well as the establishment of the pre-covid touristic flow, the NS system is required to be scalable in order to meet the customer needs. Scalability is significant to ensure that the system can manage bigger amounts of data and higher user demand in the future. We describe scalability in two axes:</p>
+  <ul>
+    <li><p>Horizontal scalability: refers to the system's ability to handle an increasing number of client requests (throughput), amount of data (input/output) and number of users (concurrency)</p></li>
+    <li><p>Vertical scalability: refers to system's ability to handle and increasing workload in terms of amount of nodes (network size) and software components (system size)</p></li>
+  </ul>
+  <h3 id="shouldhavequalityattributes">Should-have Quality Attributes</h3>
+  <!-- <h4 id="s1performance">S.1 Performance</h4> -->
+  <p><strong>S.1 Performance</strong></p>
+  <ul>
+    <li><p>Latency/Response time: For each kind of transaction or request, the system should reply timely to user input while maintaining an acceptable latency. However, latency acceptable standards are different for each component of the railway system. Critical systems of the NS infrastructure such as the European Rail Traffic Management System (ERTMS) <a class="citation" href="#nsertms">(NS, 2022)</a> which guarantees the railway safety require low latency, in milliseconds or even microseconds. On the other hand, for less critical components such as the passenger journey planner or the personal details update system, the latency can be in a range of seconds.</p></li>
+    <li><p>Throughput: The system should be able to accommodate a large number of concurrent users or transactions without performance deterioration or downtime. The system, for example, should be able to withstand high traffic periods without slowing down or failing.</p></li>
+  </ul>
+  <!-- <h4 id="s2compatibility">S.2 Compatibility</h4> -->
+  <p><strong>S.2 Compatibility (External Dependencies)</strong></p>
+  <ul>
+  <li><p>Portability: The cost of porting is less than the cost rewriting. A “Write Once, Compile/Run/Test Anywhere” approach reduces the costs of rewriting the whole product and, therefore, increases portability. The system should be able to operate across a variety of platforms, including those of various operating systems and devices without requiring substantial alterations or changes</p></li>
+  <li><p>Interoperability: The system interoperates with various external systems such as:</p>
+  <ul>
+    <li>Payment gateway of bank and payment vendors</li>
+    <li>API of OV-Chipkaart system</li>
+    <li>API of Google Maps or Open Street Maps</li>
+    <li>API of other (national or international) public transport systems (e.g., arriva, breng, keolis, qbuzz) </li></ul></li>
+    <li><p>Ease of Integration: The system should facilitate integration by exposing a real-time point-to-point API rendering XML or JSON data.</p></li>
+  </ul>
+  <!-- <h4 id="s3usability">S.3 Usability</h4> -->
+  <p><strong>S.3 Usability</strong></p>
+  <p>Usability ensures that user interfaces are designed in a friendly and convenient use. Based on the Usability's definition of the ISO/DIS 9241-11 standard ("Ergonomics of human-system interaction — Part 11: Usability: Definitions and concepts") <a class="citation" href="#usability"></a>, our system aims for the following attributes: </p>
+  <ul>
+    <li>Effectiveness: "accuracy and completeness with which users achieve specified goals" </li>
+    <li>Efficiency: "resources used in relation to the results achieved"</li>
+    <li>Satisfaction: "extent to which the user's physical, cognitive and emotional responses that result from the use of a system, product or service meet the user's needs and expectations"</li>
+  </ul>
+  <p>Furthermore, to improve Usability and the User Interface, it is important that our system takes into consideration the "10 usability heuristics for User Interface design" proposed by Nielsen <a class="citation" href="#nielsen">(in Research-Based User Experience, n.d.)</a> (see Appendix). Last, The Netherlands has adopted the Web Content Accessibility Guidelines (WCAG) as part of its legislation; hence, the system should be accessible to users with disabilities.</p>
+
+  <!-- <h4 id="s4maintainability">S.4 Maintainability</h4> -->
+  <p><strong>S.4 Maintainability</strong></p>
+  <p>Our goal is to keep the same quality over time. Hence, the system should focus on the ‘low coupling, high cohesion’ principle to allow adaptive and corrective maintenance. The adaptive maintenance refers to the system’s ability to upgrade dependencies, successfully install new security patches and comply with new regulation. The corrective maintenance refers to the system’s ability to allow bug fixing and defect removal.</p>
+  <!-- <h4 id="s5privacy">S.5 Privacy</h4> -->
+  <p><strong>S.5 Privacy</strong></p>
+  <p>The system should adopt privacy-by design concepts <a class="citation" href="#schaar_2010">(Schaar, 2010)</a> from an early stage to guarantee that privacy is integrated into system design and development (e.g., data protection impact assessments, privacy risk management, and privacy-enhancing technology). The system should only gather the information that is necessary from users, and it should do so in a transparent, lawful, and user-informed manner. User data should be processed exclusively for the purposes for which they were acquired. Only authorized parties should have access to user data. The system should safeguard user data against unauthorized access, disclosure, or alteration and should guarantee that data security is commensurate to the data's sensitivity and risk level. The system should respect user rights according to the EU GDPR regulation, including the ability to access, correct and erase data. </p>
+  <h3 id="couldhavequalityattributes">Could-have Quality Attributes</h3>
+  <!-- <h4 id="c1modularity">C.1 Modularity</h4> -->
+  <p><strong>C.1 Modularity</strong></p>
+  <p>The system should be divided into more manageable, independent modules or components that may be created, tested, deployed, and maintained independently (e.g., ticket buying, train schedules, real-time train information, and customer service). Modularity as an enabler for other quality attributes such as flexibility, scalability and, maintainability. </p>
+  <!-- <h4 id="c2composability">C.2 Composability</h4> -->
+  <p><strong>C.2 Composability</strong></p>
+  <p>The system should allow composability and putting all the developed components together should be easy and fast. Each component can be composed differently without affecting the rest of the components and it should not require much time and effort to replace existing components.</p>
+  <!-- <h4 id="c3durability">C.3 Durability</h4> -->
+  <p><strong>C.3 Durability</strong></p>
+  <p>The system should be able to store the customer and personnel data in a persistence layer for an extended period due to compliance and auditing constraints. It should also demonstrate a backup a disaster recovery ability.</p>
+  <!-- <h4 id="c4flexibility">C.4 Flexibility</h4> -->
+  <p><strong>C.4 Flexibility</strong></p>
+  <ul>
+    <li><p>Configurability: Since the product is large, we cannot rely on hard-coded parameters which require rebuild to change. The system should have documented configuration options and allow startup parameters (restart needed to apply changes)</p></li>
+    <li><p>Extensibility: The system should allow new functionalities to be deployed without affecting the correct operation of other features and the system in general</p></li>
+    <li><p>Modifiability: The system should allow existing functionalities to be changed or removed without affecting the correct operation of other features and the system in general</p></li>
+  </ul>
+  <p>Both Extensibility and Modifiability are related to the adaptive and corrective maintainability attributes of the system.</p>
+  <!-- <h4 id="c5deployability">C.5 Deployability</h4> -->
+  <p><strong>C.5 Deployability</strong></p>
+  <p>System modifications should be securely and swiftly deployed into production without affecting the essential system’s availability. The deployment procedure should involve continuous integration and continuous delivery (CI/CD) to incorporate automated testing and validation. However, since the system is part of a railway service, the deployment process should not be fully automated and sign-offs should be in place before deploying to the production environment. The deployments should be launched during off-peak (night) hours with planned or no downtime and rollback should be possible.</p>
+
+    <p><a href="#domain_analysis"> Back to start of Domain Analysis</a> | <a href="#pyramid">Back to Pyramid</a></p>
+
+  </div>
+
+  <!-- DOMAIN ANALYSIS END -->
+
+
+  <!-- DESIGN PROBLEM -->
+
+  <button type="button" class="collapsible" id="solves_design_problem">4. Space-Based Architecture solves Design
+    Problem</button>
+  <div class="content">
+
+    <h2 id="design_problem">4.1. Design Problem</h2>
+
+    <ol>
+      <li>
+        <p>Operation Disruption: Severe delays, cancellations, and annoyance for customers can occur due to various
+          reasons, such as technical issues, unexpected maintenance, or weather conditions. Hence, the NS system should
+          have a highly available architecture with redundancy built into its design. The system should also have robust
+          monitoring and alerting systems that can identify issues quickly and allow for prompt resolution. The system
+          must also have adequate backup and disaster recovery procedures to ensure that the system can recover from any
+          disruptions as soon as possible.</p>
+      </li>
+      <li>
+        <p>Increased Number of Commuters/Passengers: To address this challenge, the NS system should be optimized for
+          performance and speed, allowing it to handle the increased traffic and demand during peak periods. The system
+          should be scalable, allowing it to handle the increased traffic volumes. The system must also have robust
+          testing procedures to ensure that any updates or modifications do not introduce new bugs or issues.</p>
+      </li>
+      <li>
+        <p>Security Breaches and GDPR Compliance: As a critical infrastructure for the Netherlands, the NS system is a
+          prime target for cyberattacks that can harm NS and its customers. To address this challenge, the system must
+          have robust security measures, such as firewalls, intrusion detection, and encryption to prevent unauthorized
+          access and data breaches. The system must also comply with GDPR regulations, ensuring that customer data is
+          secure and that data privacy is protected.</p>
+      </li>
+      <li>
+        <p>System Operation 24/7: The NS system operates 24/7, which increases the probability of system failures and
+          requires a more extensive time frame to acknowledge and repair issues. Thus, the system should have 24/7
+          monitoring and alerting systems that can identify and resolve issues promptly. The system must also have
+          adequate backup and disaster recovery procedures to ensure that the system can recover from any disruptions as
+          soon as possible.</p>
+      </li>
+    </ol>
+    <p>In conclusion, the NS system faces various challenges that can impact its design and development. By considering
+      the above challenges and taking appropriate measures, such as designing a highly available architecture,
+      optimizing the system for performance and speed, and implementing robust security measures, the NS system can
+      deliver high-quality and reliable train services to its customers while mitigating any potential risks or
+      disruptions.</p>
+
+    <p><a href="#design_problem"> Back to start of Design Problem</a> | <a href="#pyramid">Back to Pyramid</a></p>
+
+  </div>
+
+  <!-- DESIGN PROBLEM END -->
+
+  <!-- SYSTEM ARCHITECTURE -->
+
+  <button type="button" class="collapsible" id="arch_desc">5. Space-Based Architecture implements Architectural
+    Description</button>
+  <div class="content">
+
+    <h2 id="system_design">5.1. System Design</h2>
+
+    <p>In this section, we provide an extensive analysis of the NS system design. We discuss the design of the complete
+      system, and then we focus our study on one system component, train management (vertical design). Next, we explore
+      four alternative designs and the architectural decisions about the vertical system component and build a proof of
+      concept.</p>
+    <h3 id="1completesystemdesign">1. Complete System Design</h3>
+    <p>We model a wide high level overview of the NS system. The model presents the system in two levels of abstraction.
+      The first highest representation level has been divided into three parts. The Customer interaction entails the
+      system part a customer interacts with (i.e., the website, the app, display signs at stations and ticket machines).
+      Services component entail all sub-services, products and operations that NS provides. Employees component includes
+      all the employee tasks and procedures of NS. The second level representations inside these 3 topics represent the
+      aspects of the whole NS system.</p>
+    <p><img src="/appendices/design/NSbroadsystem.png" alt="Complete system architecture design image." /></p>
+    <!-- TODO fix this to discuss the four proposed designs and then why we chose for space based -->
+    <h4 id="customerinteraction">Customer interaction</h4>
+    <ul>
+      <li>Real time (train) information, the retrieval and display of real time (train/alternative travel) information
+        for the costumer. Such as train travel times but also any delays or activities on the railway.</li>
+      <li>Payment system, entails the payment system on the website/app which allows you to buy tickets for a trip and
+        manage your subscriptions of the OV card. But also the ticket machines and the check in/out gates at stations.
+      </li>
+      <li>Tourist information, entails extra information for tourists and trips that is found on the website. This
+        includes information on combination of deals of train + hotel/activity and extra tips/recommendations on
+        activities for
+        an outing.</li>
+      <li>Additional NS information, entails all the extra information that can be found on the NS website such as
+        sponsoring, safety, sustainability, NS news and job applications.</li>
+    </ul>
+    <h4 id="services">Services</h4>
+    <ul>
+      <li>Train management, entails the planning of train rides, train maintenance and collection of train data.</li>
+      <li>Alternative travel management, the planning of busses and trams, but also the management of the bicycle garage
+        and services of the NS.</li>
+      <li>NS products, entails the accounting and the products the NS provides, such as OV subscriptions and the renting
+        of bikes. Basically the backend system for the payment system.</li>
+      <li>User management, the management of the users accounts such as, which contain the information on their OV
+        subscriptions and other user details. </li>
+      <li>Customer service, the support for any problem a customer might face with NS or simply for getting/ providing
+        extra information. Examples are: support for blind or wheelchair bound people and helping with customer account
+        management.</li>
+    </ul>
+    <h4 id="employees">Employees</h4>
+    <ul>
+      <li>Employees management, planning and deployment of employees. But also the Employees information and accounting.
+      </li>
+    </ul>
+    <h3 id="2trainmanagementverticaldesign">2. Train Management Vertical Design</h3>
+    <p>The main goal of train management is to provide live data of the position and status of trains as well as assist
+      in scheduling trains and their maintenance. Our PoC focuses on this component.</p>
+
+    <h2 id="c4_model">5.1. C4 Model</h2>
+
+  <p>We applying Simon Brown's C4 model <a class="citation" href="#c4model">(“The C4 Model for Visualising Software Architecture,” n.d.)</a> to visualize Software Architecture of the NS Train Management System:</p>
+  <h3 id="level1systemcontextdiagram"><strong>Level 1 - System Context Diagram</strong></h3>
+  <p><img src="/assets/Context.png" alt="Overview of System Context Design" /></p>
+  <h3 id="level2containers"><strong>Level 2 - Containers</strong></h3>
+  <p><img src="/assets/Container.png" alt="Overview of Containers" /></p>
+  <h3 id="level3components"><strong>Level 3 - Components</strong></h3>
+  <p><img src="/assets/Component.png" alt="Overview of Components" /></p>  <h3 id="level4code"><strong>Level 4 - Code</strong></h3>
+  <p>At this level, we describe the implementation details of each component. In the case of the train scheduler component, this might include the classes and functions responsible for scheduling trains based on factors such as available tracks, maintenance schedules, and expected passenger demand.</p>
+
+    <p><a href="#arch_desc"> Back to start of Architectural Description</a> | <a href="#pyramid">Back to Pyramid</a></p>
+
+  </div>
+
+  <!-- SYSTEM ARCHITECTURE END -->
+
+
+
+  <!-- ALTERNATIVE ARCS -->
+
+  <button type="button" class="collapsible" id="alternatives">6. Space-Based Architecture outweighs Alternative
+    Architectures</button>
+  <div class="content">
+
+
+    <h2 id="space_based">6.1. Arcitectural Decisions</h2>
+
+    <h3 id="comparisonofalternativearchitectures">Comparison of Alternative Architectures</h3>
+    <p>In this section, we summarize the characteristics of the four architectural alternatives and draw conclusions on
+      the selected architecture. This decision is based on our KPIs, stakeholder concerns, functional and non-functional
+      requirements with respect to balancing the trade-offs.</p>
+    <p>Microservices architecture has advantages such as increased scalability, robustness, modularity, agility, and
+      fault tolerance. On the other hand, the system demonstrates increased complexity and the communication overhead
+      between APIs can have an affect the performance. </p>
+    <p>Space-based architecture offers scalability, high performance, fault tolerance, availability, and flexibility.
+      However, this is architecture is expensive to build and test, and maintaining consistency among nodes might be
+      difficult.</p>
+    <p>The N-tier design provides separation of concerns, scalability, and performance. Unfortunately, it has poor fault
+      tolerance and limited reliability given the whole system fails if a single a tier crashes. Furthermore, if the
+      system becomes quite large or is not implemented correctly, it might result in a monolith-oriented approach which
+      limits maintainability and flexibility.</p>
+    <p>Benefits of the Event Bus Architecture include decoupling, flexibility, robustness, scalability, and
+      responsiveness. Nevertheless, it is difficult to deploy, increases latency and network traffic and is difficult to
+      maintain consistency.</p>
+    <table>
+      <tr>
+        <td>Quality Attribute</td>
+        <td>Microservice</td>
+        <td>Space-based</td>
+        <td>N-tier</td>
+        <td>Event Bus</td>
+      </tr>
+      <tr>
+        <td>Modularity</td>
+        <td>+++</td>
+        <td>++</td>
+        <td>+</td>
+        <td>+++</td>
+      </tr>
+      <tr>
+        <td>Deployability</td>
+        <td>+++</td>
+        <td>+++</td>
+        <td>++</td>
+        <td>+++</td>
+      </tr>
+      <tr>
+        <td>Usability</td>
+        <td>++</td>
+        <td>++</td>
+        <td>++</td>
+        <td>++</td>
+      </tr>
+      <tr>
+        <td>Performance</td>
+        <td>++</td>
+        <td>+++</td>
+        <td>+++</td>
+        <td>++</td>
+      </tr>
+      <tr>
+        <td>Scalability</td>
+        <td>+++</td>
+        <td>+++</td>
+        <td>++</td>
+        <td>+++</td>
+      </tr>
+      <tr>
+        <td>Reliability</td>
+        <td>++</td>
+        <td>+++</td>
+        <td>+</td>
+        <td>++</td>
+      </tr>
+      <tr>
+        <td>Availability</td>
+        <td>++</td>
+        <td>+++</td>
+        <td>+</td>
+        <td>++</td>
+      </tr>
+      <tr>
+        <td>Security</td>
+        <td>++</td>
+        <td>+++</td>
+        <td>++</td>
+        <td>+++</td>
+      </tr>
+      <tr>
+        <td>Privacy</td>
+        <td>++</td>
+        <td>++</td>
+        <td>++</td>
+        <td>++</td>
+      </tr>
+      <tr>
+        <td>Flexibility</td>
+        <td>++</td>
+        <td>++</td>
+        <td>+</td>
+        <td>++</td>
+      </tr>
+      <tr>
+        <td>Compatibility</td>
+        <td>++</td>
+        <td>++</td>
+        <td>++</td>
+        <td>++</td>
+      </tr>
+      <tr>
+        <td>Maintainability</td>
+        <td>++</td>
+        <td>+++</td>
+        <td>+</td>
+        <td>++</td>
+      </tr>
+    </table>
+    <h3 id="designselection">Design selection</h3>
+    <p>The NS system is a real time system used by the large population of the Netherlands, thus we have selected and
+      recognized some key performance indicators for our system. For the NS system we have recognized Availability,
+      Reliability, Security, and Scalability as our key performance indicators. </p>
+    <p>As the NS system is a real time system the availability and reliability KPI are matter of course as the data and
+      services provided have to be correct and readily available for its users. Delays or service disruptions cause
+      discomfort and financial loss to the company and harm customer satisfaction. </p>
+    <p>NS handles sensitive customer information, financial data and passenger travel plans. Therefore, a potential
+      security breach could harm both customers and the company (in terms of heavy fines, reputational damage etc.).
+      Security breaches on these systems could be detrimental on a national scale and thus a high level of security is
+      required throughout the system. </p>
+    <p>Even in 2021 in the height of the Covid-19 pandemic the NS on average carried 611,000 passengers per day <a class="citation" href="#vosman_2022">(Vosman, 2022)</a>. These people all have to plan their travels and thus use the NS system which results in a similar
+      amount of users and client requests per day. Scalability is thus very significant as the system has to be able to
+      handle these amounts of requests per day. Furthermore scalability is in such a large scale system intertwined with
+      the availability as it ensures that the system does not get overcrowded or delayed and that users have easy access
+      to the service. </p>
+    <p>Given the strengths of each design alternative observed above we have opted to use the Space-based architecture
+      design. As the space-based design offers the best support for our KPIs.</p>
+
+    <h2 id="microservices">6.2. Microservices Architectures</h2>
+
+  <h3 id="trainmanagementmicroservicesdesign">Train Management Microservices Design</h3>
+  <p>Microservices are small applications that carry out a single task. They can be deployed, tested and scaled independently. The concept originates from the breakdown of the monolith architecture into a granular system communicating via messages. This provide industries and developers with agile delivery methods for service-oriented architectures and facilitates the transition from function-oriented legacy designs to highly flexible services <a class="citation" href="#microservices_general">(Larrucea et al., 2018)</a>.</p>
+  <p>Some notable dependencies on the system are the train schedules which impose limits on the maintenance scheduler. Microservices integrate these dependencies using a train availability API connected to the maintenance scheduler. Raw data are provided by the railway network sensors and the rail traffic management system <a class="citation" href="#nsertms">(NS, 2022)</a> . The live data ingestion engine forwards the data to a live database optimized to store time-based information such as the GPS coordinates. The summarization service creates then a summary of the train status and passes it to the maintenance scheduler. Train status, maintenance status and summary are stored in an SQL database. We have decided to use PostgreSQL since all team members are familiar with it.</p>
+  <p>Thus, we discuss below two main aspects in train management, the data aspect and the scheduling and maintenance aspect. Furthermore, in the following diagram, we highligh the modules outside of the train management system with red colour, whereas the nodes in white are the essential parts of our system.</p>
+  <!-- , however these are shown to consider the connections from and to the endpoints of the train management. -->
+    <p><img src="/appendices/design/microservices/train_management_vertical_microservices.drawio.png" alt="Train Management vertical microservices' architecture design image." /></p>
+  <h3 id="data">Data</h3>
+  <p>Mainly entails the services used for the collection, storage, and provision of data surrounding the travelling trains.</p>
+  <ol>
+    <li><p>Live data ingestion: The live data input for the system which comes from the sensors in the train, i.e., the GPS, speedometer or brakes. </p></li>
+    <li><p>Train summary (Postgres database): Database for trains operated/owned by the NS. Contains all train information such as type, distance travelled and maintenance status.</p></li>
+    <li><p>Train data aggregator: Combines the live data with the data from the train summary database. For example, if there is a train or network malfunction then the maintenance status of the train will be updated in the database. Similarly, if the train has travelled 10 km since the last synchronization, the train data aggregator will also update the database.</p></li>
+    <li><p>Live database: Database for the live data of the trains. This database is mainly focused on demand performance. The database contains data about the location and travel times of the trains.</p></li>
+    <li><p>Live data API: API for getting the live data from the database.</p></li>
+    <li><p>Train timeliness API: API for the live travel times of the trains. This API delivers the data mainly to the app/website travel planner and the schedule boards at the stations.</p></li>
+    <li><p>Train positioning API: API for the live location of the trains. This API delivers the data to the train radar and to NS personnel responsible for the railway network operation.</p></li>
+  </ol>
+  <h3 id="schedulingandmaintenance">Scheduling and maintenance</h3>
+  <ol>
+    <li><p>Maintenance scheduler: Retrieves the maintenance status of trains and schedules maintenance activities. The scheduler is associated with the train scheduler affecting and imposing limits on each other. This occurs since schedules are planned according to availability.</p></li>
+    <li><p>Manual maintenance API: Manual input of a maintenance job, mainly used for emergencies or on the go maintenance. The information of the manual maintenance gets send forwards towards the maintenance scheduler.</p></li>
+    <li><p>Train availability API: Retrieves and combines the data from the live data API and the maintenance scheduler. Used for imposing or resolving limits on train schedules.</p></li>
+  </ol>
+  <h3 id="benefitsandchallenges">Benefits and Challenges</h3>
+  <p>In general, microservices enable the creation of a fault-tolerant system and present many advantages. Nonetheless they might not be entirely suitable for our system design.</p>
+  <h4 id="benefits">Benefits</h4>
+  <ul>
+    <li>Fault-tolerance was briefly mentioned before, with decoupling a failure of a component does not stop the whole system. Furthermore it is possible to use duplicate services for the key components. In case of failure, these duplicates can still continue processing messages and the system remains operational.</li>
+    <li>The microservices architecture provides a high level of modularity for the system. As the different system components are seperated, then each component can contain its own dependency management, compilation and deployment.</li>
+    <li>Given the system modularity, this architecture can achieve a high level of scalability. Any loose component can easily be added or replaced for better scalability.</li>
+  </ul>
+  <h4 id="drawbacks">Drawbacks</h4>
+  <ul>
+    <li>Microservices have higher complexity and require a higher throughput (demand performance) throughout the system. For example, there are several requests which need to pass through different components in order data to reach the train availability component from the database.</li>
+    <li>Tied with higher complexity and throughput, they require extra effort for security. Data are often sent over multiple links/connections and, therefore, it is necessary to secure these connections for each component.</li>
+    <li>Decoupling might not be as effective as considered. It was mentioned before as a benefit, nevertheless a lot of the processes of this subsystem present heavy dependencies on each other. Thus, having duplicate services for key components might not be feasible.</li>
+  </ul>
+
+
+    <h2 id="event_bus">6.3. Event-Bus Architectures</h2>
+
+  <h3 id="trainmanagementeventbusdesign">Train Management Event Bus Design</h3>
+  <p>This design is centered around the event bus architecture where multiple subscription topics are used for the various subsystems. An event-driven architecture employs events to activate and communicate amongst disconnected services. An event is a change in status or an update and can either convey the state or act as identifier. Event-driven architectures are made up of three major components: event producers, event routers, and event consumers. A producer sends an event to the router, which filters and sends the events to consumers. Producer and consumer services are separated, allowing them to be expanded, modified and delivered separately <a class="citation" href="#bruns_dunkel">(Bruns &amp; Jürgen, 2010)</a>.</p>
+  <p><img src="/appendices/design/event-bus/train_management_vertical_event_bus.drawio.png" alt="Train management event bus architecture design" /></p>
+  <h3 id="storageprocess">Storage Process</h3>
+  <p>This process listens to the live data coming in on the event bus from provided by the railway network sensors and the rail traffic management system which publish to the event bus. Then, it pipes all live data to the live database allowing for replays. Furthermore, it summarizes all incoming live data to keep a summary on the train system sends this information to other systems.</p>
+  <h3 id="maintenancescheduler">Maintenance Scheduler</h3>
+  <p>This system has three responsibilities (i) it checks regularly the trains' status fetching data from the train summary database (ii) it schedules manual maintenance. The scheduler forwards the maintenance schedules to the train scheduler since train schedules are planned based on availability.</p>
+  <h3 id="manualmaintenanceapi">Manual Maintenance API</h3>
+  <p>This API exposes an endpoint for employees to plan manual maintenance in case of an emergency breakdown or infrastructure damage. Also, it is used by railway engineers who inspect trains and determine if they need maintenance earlier.</p>
+  <h3 id="otherdependencies">Other Dependencies</h3>
+  <p>All the other dependencies can obtain the required information by subscribing to the event bus.</p>
+  <h3 id="benefitsandchallenges">Benefits and Challenges</h3>
+  <p>In general, the event bus architecture enables the creation of a fault-tolerant system and presents many advantages. Nonetheless it might not be entirely suitable for our system design.</p>
+  <h3 id="benefits">Benefits</h3>
+  <ul>
+    <li>Fault-tolerance was briefly mentioned before. It works well in the event bus architecture, because it is possible to use duplicate services to listen the same subscription topics. Thus, in case of a failure, duplicate services can still continue processing messages and the system remains operational.</li>
+    <li>Decoupling is related to fault-tolerance. If one part of the subsystem fails others can continue functioning. </li>
+  </ul>
+  <h3 id="drawbacks">Drawbacks</h3>
+  <ul>
+    <li>The event bus allows saving messages until they are delivered. This is a positive attribute, however it is not necessary for our system. The storage process is able to retransmit data from the live database or the train summary database, if necessary. Moreover missing messages from the railway sensors is not an issue since it is possible to interpolate data points in order to model the missed messages.</li>
+    <li>Decoupling might not be as effective as considered. It was mentioned before as a benefit, nevertheless a lot of the processes in this subsystem have heavy dependencies on each other. Thus, if one part crashes the rest system might also stop working.</li>
+    <li>An inherent drawback of this architecture is that the event bus throughput is limited. A possible increase of the incoming sensor data or the attachment of multiple new systems to the event bus can not be easy or feasible. Hence, this architecture might require either splitting the bus up into smaller sub-buses (which increases complexity) or moving to an entirely different architecture in case system needs to expand.</li>
+  </ul>
+
+
+    <h2 id="n_tier">6.4. N-Tier Architecture</h2>
+
+  <h3 id="trainmanagementntierdesign">Train Management N-Tier Design</h3>
+  <p>The system is divided into logical levels under this design, each with its own set of duties and tasks. Layers are a method of delineating tasks and managing dependencies. Each layer is responsible for something different. A higher layer can utilise lower-layer services, but not vice versa.</p>  
+  <p><img src="/appendices/design/n-tier/3tier.drawio.png" alt="Train Management vertical N-tier Architecture design image." /></p>
+  <h3 id="presentationtieruicodebase">Presentation Tier - UI codebase</h3>
+  <p>This layer is in charge of processing user interactions and displaying information to users. It covers the user interface (UI) components that users engage with to obtain railway information and services. To retrieve and process data, the presentation layer interfaces with the middleware which contains all the business logic <a class="citation" href="#ntier_general">(Manuel &amp; AlGhamdi, 2003)</a>.</p>
+  <h3 id="businesslogicapplicationtiermiddleware">Business Logic / Application Tier - Middleware</h3>
+  <p>The business logic and train management operations are handled by this layer. It consists of a number of services and parts that handle requests and provide the necessary data and responses. The middleware performs the essential features of the NS railway system, including train schedules, ticket booking, fare computation, and customer support. To obtain and store data, the application tier fetches and passes data to the layer below which contains the database <a class="citation" href="#ntier_general">(Manuel &amp; AlGhamdi, 2003)</a>.</p>
+  <h3 id="datatierdatabase">Data Tier - Database</h3>
+  <p>The data needed by the system can be stored and retrieved by this layer. Information about railway timetables, reservations, passengers, and payments and live data are stored and managed in the database, the file system etc <a class="citation" href="#ntier_general">(Manuel &amp; AlGhamdi, 2003)</a>. </p>
+  <h3 id="benefitsandchallenges">Benefits and Challenges</h3>
+  <p>The N-tier architecture offers a flexible and scalable method for developing software, which allows easier maintainability of the railway system over time. Moreover, it offers a better separation of concerns and provides a scalability and resource utilisation potential. Each tier can be separated and scaled properly without affecting the rest tiers <a class="citation" href="#ntier_medium">(“N-Tier Architecture Explained,” 2022)</a>. This property facilitates also deployability since tiers can be deployed independently. Data are stored in a separate tier and can only be managed through specific interfaces. Thus, the architecture promotes data integrity while security and maintenance become easier. On the other hand, the N-tier architecure has medium network latency and a bad fault tolerance in case the application tier crashes. This increases the risk of failing the reliability and availability quality attributes. Moreover, even though a separate data tier enhances the data integrity and security, however it can pose a challenge to validate the security of the rest two tiers in a large system of this architecture (e.g. software vulnerabilities) <a class="citation" href="#Martinekuan">(Martinekuan, n.d.)</a>.</p>
+
+    <h2 id="space_based">6.5. Space-Based Architectures</h2>
+
+    <h3 id="trainmanagementspacebaseddesign">Train Management Space-Based Design</h3>
+    <p>Space-based architecture (SBA) is a design method that organizes the system around isolated and independent
+      functional units known as “spaces”. Each space has its own logic, data, and interface. Spaces interact with each
+      other using message passing and a virtualized middleware. The architecture enables a high degree of isolation and
+      autonomy, making the system easier to develop and deploy <a class="citation" href="#sba_general">(“Software Architecture Patterns: Space-Based Architecture,” 2023)</a>.</p>
+  <p><img src="/appendices/design/space-based/Space-based.png" alt="Train Management vertical Space-Based Architecture design image." /></p>
+    <h3 id="trainschedulerspace">Train Scheduler Space</h3>
+    <p>a. Schedule Manager: Updates the train schedules based on real-time information such as delays, cancellations,
+      and other events. Besides, generates train schedules for different routes and times based on inputs such as train
+      availability, station capacity, and maintenance requirements.</p>
+    <p>b. Train Status Tracker: Tracks the real-time status of trains such as location, speed, and delays.</p>
+    <h3 id="trainmaintenancespace">Train Maintenance Space</h3>
+    <p>a. Maintenance Manager: Manages maintenance schedules, assigns maintenance crew, monitors real-time data, and
+      updates database based on inputs such as train availability and maintenance requirements.</p>
+    <p>b. Train Maintenance Scheduler: Generates maintenance schedules for trains based on their usage, age, and
+      information extracted from the maintenance manager.</p>
+    <h3 id="trainoperationsspace">Train Operations Space</h3>
+    <p>a. Safety and Security Management: Ensure passenger safety and security during the train journey.</p>
+    <p>b. Onboard Services Management: Manage onboard services such as food and beverages, etc.</p>
+    <p>c. Resource Management: Allocate resources such as personnel and equipment to train operations.</p>
+    <h3 id="analyticsandreportingspace">Analytics and Reporting Space</h3>
+    <p>a. Performance Metrics and KPI Tracking: Tracks performance metrics and KPIs over time.</p>
+    <p>b. Train Trend Analysis and Forecasting: Analyzes trends and forecast future performance.</p>
+    <h3 id="benefitsandchallenges">Benefits and Challenges</h3>
+    <p>The first law of Software Architecture stated in <a class="citation" href="#richards2020fundamentals">(Richards &amp; Ford, 2020)</a> is “Everything is a
+      trade-off in software architecture.” Space-Based Architecture (SBA) enables the NS system to handle large amounts
+      of real-time data and ensures availability and scalability. By using a combination of in-memory storage and
+      persistent storage, SBA's provide both high performance and data durability. In an SBA, the system is composed of
+      many loosely coupled nodes that communicate with each other using a shared memory space. However, SBA
+      can also introduce additional complexity, especially when it comes to managing data consistency and ensuring
+      proper coordination between nodes. Though SBA is a powerful tool for building a highly scalable and available
+      system, it requires careful consideration of trade-offs between performance, complexity, and maintainability. </p>
+    <p>According to <a class="citation" href="#richards2020fundamentals">(Richards &amp; Ford, 2020)</a>, some metrics of SBA include high agility, easy
+      deployment, high performance, highly scalable, low ease of development, and expensive and time-consuming for
+      testing purposes. </p>
+
+    <p><a href="#alternatives"> Back to start of Alternative Architectures</a> | <a href="#pyramid">Back to Pyramid</a>
+    </p>
+
+  </div>
+
+  <!-- ALTERNATIVE ARCS END-->
+
+
+
+  <!-- DEMO AND POC -->
+
+  <button type="button" class="collapsible" id="achievable">7. Space-Based Architecture is achievable</button>
+  <div class="content">
+
+    <h2 id="poc">7.1. Proof of Concept</h2>
+
+    <h3 id="goalofpoc">Goal of PoC</h3>
+    <p>Our PoC demonstrates that we can achieve good scalability and availability for the NS system using space-based
+      architecture. We deploy instances of the train scheduler inside the Train Management space and use a load balancer
+      to direct the traffic reaching to schedulers. </p>
+    <h3 id="poc">PoC</h3>
+  <p><img src="/assets/Component.png" alt="Overview of Components" /> The current PoC focuses on implementing the train scheduler. The PoC consists of:</p>
+    <ul>
+      <li>
+        <p>A Spring MVC rest controller for the scheduler</p>
+      </li>
+      <li>
+        <p>A live data generator for dummy information on trains and their schedules</p>
+      </li>
+      <li>
+        <p>A database with dummy information regarding the trains</p>
+      </li>
+      <li>
+        <p>The scheduler is able to accept requests for storage and retrieval of the train data (dummy data)</p>
+      </li>
+      <li>
+        <p>In the scheduler, we have created a function for generating a primitive schedule</p>
+      </li>
+      <li>
+        <p>The scheduler is able to update and retrieve the real time status of trains from the database</p>
+      </li>
+    </ul>
+    <p>These are all contained and can be launched inside an Docker container. Docker can launch multiple instances of
+      the train scheduler. Lastly a load balancer has been placed in front of the scheduler space.</p>
+    <p>The following image showcases the setup of the docker containers and how they communicate:
+      <img src="/assets/demo-setup.drawio.png" alt="Docker container setup" />
+    </p>
+    <p>It can be easily run with the following command:</p>
+    <pre><code>cd infra &amp;&amp; sudo docker compose up</code></pre>
+    <p>Users can see the frontend at localhost:3000. High availability works by shutting down one of the scheduler
+      containers. However they can also have a look at the prerecorded version of the demo below:</p>
+    <video width="100%" controls="">
+      <source src="/assets/Screencast_from_05-04-23_20_43_15.mp4" type="video/mp4" />
+    </video>
+    <p>
+      High availability is an attribute that can be observed in a system or not. Since our demo shows a working high
+      availability system we consider the demo to be sufficient for our testing. Therefor we do not perform any further
+      experiments.</p>
+
+    <p><a href="#achievable"> Back to start of Proof of Concept</a> | <a href="#pyramid">Back to Pyramid</a></p>
+
+  </div>
+
+  <!-- DEMO AND POC END-->
+
+
+  <!-- APPENDIX -->
+
+  <button type="button" class="collapsible" id="appendix">8. Appendix</button>
+  <div class="content">
+
+    <h2 id="user_stories">8.1 User Stories</h2>
+
+    <ol>
+    <li><p>As a passenger, I want the NS system to provide me with a user-friendly interface that allows me to easily plan my route and access real-time train information.</p></li>
+    <li><p>As a passenger, I want the NS system to provide a reliable and secure payment system that allows me to purchase tickets easily and safely.</p></li>
+    <li><p>As a passenger, I want the NS system to offer me parking facilities for bikes and cars at train stations and the ability to purchase parking tickets in advance.</p></li>
+    <li><p>As a passenger with a busy schedule, I want the ns.nl system to offer me the ability to book train tickets in advance and receive alerts for train delays and cancellations.</p></li>
+    <li><p>As a passenger with a preference for sustainable travel, I want the ns.nl system to offer me information about eco-friendly travel options, such as electric trains and bike rentals.</p></li>
+    <li><p>As a passenger with a flexible schedule, I want the ns.nl system to offer me the ability to purchase off-peak tickets at a discounted rate.</p></li>
+    <li><p>As a passenger with a disability, I want the ns.nl system to provide me with accessible services, such as audio announcements and tactile maps.</p></li>
+    <li><p>As a student, I want the ns.nl system to offer me discounted fares that suit my budget and academic schedule.</p></li>
+    <li><p>As a passenger with a specific dietary requirement, I want the ns.nl system to provide me with information about on-board food options, as well as the ability to pre-order meals that meet my dietary needs.</p></li>
+    <li><p>As a passenger with a pet, I want the ns.nl system to provide me with clear guidelines and policies for traveling with pets, as well as facilities like designated pet areas.</p></li>
+    <li><p>As a passenger with a large group, I want the ns.nl system to offer me group travel packages that include discounts on train tickets, accommodations, and other services.</p></li>
+    <li><p>As a business passenger, I want the ns.nl system to offer me the ability to book and manage multiple train tickets for my team, with features like centralized billing and reporting.</p></li>
+    <li><p>As a business passenger with a tight schedule, I want the ns.nl system to offer me the ability to reserve seats and workspaces on trains, as well as access to on-board Wi-Fi and other amenities.</p></li>
+    <li><p>As a frequent passenger, I want the ns.nl system to offer me a loyalty program that rewards me for my frequent use of the service, with benefits like discounted fares and priority boarding.</p></li>
+    <li><p>As a frequent passenger, I want the NS.nl system to offer a mobile app that allows me to track my train history and see my past journeys, so that I can keep track of my travel habits.</p></li>
+    <li><p>As a passenger, I want the NS.nl system to provide a mobile app that allows me to purchase tickets and store them on my phone, so that I don't have to worry about printing or losing physical tickets.</p></li>
+    <li><p>As a passenger, I want the NS.nl system to offer a feedback mechanism that allows me to share my experience and provide suggestions for improvement, so that the service can be continuously improved to meet the needs of users.</p></li>
+    <li><p>As a tourist visiting the Netherlands, I want the ns.nl system to provide me with information about local attractions and events, as well as tips for getting around the country by train.</p></li>
+    <li><p>As a train operator, I want to be able to view and manage train schedules and routes, so that I can optimize train operations and reduce delays and cancellations.</p></li>
+    <li><p>As a customer service representative, I want to be able to view passenger information and ticketing data, so that I can assist passengers with their travel needs and resolve issues quickly and efficiently.</p></li>
+    </ol>
+
+    <h2 id="accountability">8.2 10 usability heuristics for User Interface design by Nielsen</h2>
+
+    <ol>
+    <li>Visibility of system status: the system should inform the user what is happening</li>
+    <li>Match between system and the real world: the system should use real world and train operation-related language</li>
+    <li>User control and freedom: the system should allow users leave unwanted actions and processes.</li>
+    <li>Consistency and standards: the system should be consistent and leave no space for ambiguation.</li>
+    <li>Error prevention: the system should try to eliminate the possibility of an error and prevent problems</li>
+    <li>Recognition rather than recall: the system should minimize the user’s memory load by making components and options easily recallable and visible</li>
+    <li>Flexibility and efficiency of use: the system should allow flexible processes to be carried out in multiple ways to allow efficiency of use</li>
+    <li>Help users recognize, diagnose, and recover from errors: the system should display meaningful errors guiding the users in plain language</li>
+    <li>Aesthetic and minimalist design: Interfaces should contain only the necessary and relevant information</li>
+    <li>Help and documentation: Documentation helps sometimes users understand and complete their goals</li>
+    </ol>
+
+    <h2 id="team_plan">8.3 Team Objectives</h2>
+
+    <p>Integrating all the individual goals into the team's objectives is important to ensure there is a vision into
+      what the project should become. Our team aimed to acquire knowledge on developing a high-quality software
+      architecture that meets the requirements of stakeholders while having the ability to be flexible and adaptable to
+      accommodate future changes and enhancements. We intended to explore and incorporate the fundamental principles of
+      secure software design into our project. We also liked to gain a comprehensive understanding of diverse complex
+      architectures and be able to have a better view of how design decisions impact time-to-market. Also, we were
+      planning to investigate various quality attributes and implement proof of concept to validate the feasibility of
+      our proposed system.</p>
+    <p>Our objectives remained steady throughout this project. We did not make any updates during the Midterm
+      deliverable.
+    </p>
+    <p>Our final assessment of the team's results in terms of the initially defined rubrics is that we managed to
+      fulfill them. Specifically, we successfully performed the following:</p>
+    <ul>
+      <li>Designed systems such that replicate services ensure high availability for
+        users.</li>
+      <li>Designed more complex architectures that still allow for extensions in different layers and offer good
+        scalability with future-proof planning</li>
+      <li>Identified potential design patterns and best practices in software architecture</li>
+      <li>Obtained better knowledge on software architecture principles that helped us understand how real life systems
+        interoperate, integrate and perform</li>
+      <li>Understand the current state of the software architecture to identify any bottleneck or areas for
+        improvement</li>
+      <li>Gained more experience in making a good PoC</li>
+    </ul>
+    <p>Overall, we consider that the team successfully met the initial project rubrics and all team members learned and
+      improved their skills and knowledge during this project.</p>
+
+    <h2 id="devops">8.4 DevOps </h2>
+
+    <p>The DevOps has two main parts, one for the PoC/Demo and one for the blog. For those that ended up here to only
+      learn how to run the PoC please look at the <a href="https://gitlab.ewi.tudelft.nl/in4315/2022-2023/sa-team5">main
+        README in the GitLab repo</a>. And for the remainder of the readers that still have an ornate interest in
+      DevOps, CI/CD, or general automation we invite them to read on! First as mentioned we discuss the demo, and then
+      we move on to the blog for those that are especially interested.</p>
+    <h3 id="releasingademo">Releasing a demo</h3>
+    <p>The PoC exists to show that the space based architecture works nicely for high availability, the simplest manner
+      to showcase this is through a demo running inside a docker environment. Right now there is a single command that
+      can be used to start the showcase, this is done through a docker compose file.</p>
+    <p>The following image showcases the setup of the docker containers and how they communicate:
+      <img src="/assets/demo-setup.drawio.png" alt="Docker container setup" />
+    </p>
+    <p>As you can see the backend is in the form of a double setup of the train scheduler and in this case connected
+      through a singular PostgreSQL database. Normally this database synchronization layer would consist out of
+      separated databases, this could be done with PostgreSQL, but this is difficult to set up in such a way that a
+      single command can run the whole demo. The data generator and frontend are there to showcase that the system
+      actually works and one of the backend spaces can be shutdown without affecting the frontend. </p>
+    <p>All of this can be run with a single command in the root folder of this project: </p>
+    <pre><code>cd infra &amp;&amp; sudo docker compose up</code></pre>
+    <p>To stop the containers you can press <code>ctrl</code> + <code>c</code>, and can be pressed again to force
+      shutdown instead of shutting down gracefully.</p>
+    <h3 id="dockerizingandtroublesofmonorepos">Dockerizing and troubles of mono repos</h3>
+
+    <p>As expected to be able to run in docker all our developed programs require a Dockerfile, right now the docker
+      compose uses this to build all images locally. There is also the possibility to pull images from the GitLab
+      container registry. All the projects are inside the same git repository it is necessary to handle it in a way of a
+      small mono repo. Normally versioning would be troublesome in a mono repo but because we use docker images this can
+      be used as a versioning system. To prevent wastage of runner agent minutes and faster merging of changes only the
+      related pipelines run for a merge request. The container registry receives updated versions of the docker images
+      when these land on the main branch, this is also done by the CI/CD pipelines. </p>
+    <p>Of course all the Java code has their own built pipelines that are fired off and have to pass for a PR to be
+      accepted. The checks consist out of Checkstyle, PMD, SpotBugs and a Jacoco coverage report. </p>
+    <h3 id="releasingablog">Releasing a blog</h3>
+    <p>The blog you are reading right now is also published via a CI/CD of course, the actual version you are reading
+      now is the one that is also on the main branch. Merging to main does depend on a test pipeline, this is a two
+      stage pipeline. First there is a build stage, this means pushing broken builds ends gets caught in this stage,
+      making clear where a problem is. This also prevents the next stage from running, this was a late addition to the
+      pipeline, which uploads the current proposed website to the test URL. This is very useful because this allows
+      others to quickly view your proposed changes without needing to build it on their machines, even allowing you to
+      see changes on mobile devices. In the end this made it easier and faster to merge changes and decide on changes
+      because it took away a large barrier in viewing the changes.</p>
+    <p>Just as with the program pipelines, only actual changes to the blog trigger the CI/CD pipeline. This setup
+      prevents from wasting precious CI/CD agent minutes and allows for faster merging of features unrelated to the
+      blog.</p>
+
+    <h2 id="Refernces">8.6 Accountability Appendix</h2>
+
+    <p><a class="page-link" href="/accountability/">Read the accountability appendix here</a></p>
+
+    <h2 id="Refernces">8.6 References</h2>
+
+    <ol class="bibliography"><li><span id="sba_general">Software architecture patterns: Space-based architecture. (2023). In <i>DEV Community</i>. DEV Community. https://dev.to/alexr/software-architecture-patterns-space-based-architecture-h2i</span></li>
+<li><span id="dutch_railways">Organisation of Corporate Governance at NS. (2023). In <i>Dutch Railways</i>. https://www.ns.nl/over-ns/corporate-governance/inrichting-corporate-governance-bij-ns.html</span></li>
+<li><span id="statistics">CBS. (2023). Population growth. In <i>Statistics Netherlands</i>. https://www.cbs.nl/en-gb/visualisations/dashboard-population/population-dynamics/population-growth</span></li>
+<li><span id="critical">van Justitie en Veiligheid, M. (2022). Critical Infrastructure (protection). In <i>National Coordinator for Security and Counterterrorism</i>. Ministerie van Justitie en Veiligheid. https://english.nctv.nl/topics/critical-infrastructure-protection</span></li>
+<li><span id="chopade2017agile">Chopade, M. R. M., &amp; Dhavase, N. S. (2017). Agile software development: Positive and negative user stories. <i>2017 2nd International Conference for Convergence in Technology (I2CT)</i>, 297–299.</span></li>
+<li><span id="pautasso">Pautasso, C. (2020). <i>Software Architecture: visual lecture notes</i>. LeanPub. https://leanpub.com/software-architecture/</span></li>
+<li><span id="sommerville">Sommerville, I. (2010). <i>Software Engineering</i> (9th ed.). Addison-Wesley.</span></li>
+<li><span id="moscow_model">Master user requirements with moscow prioritization model. (2023). In <i>StoriesOnBoard Blog</i>. https://storiesonboard.com/blog/moscow-prioritization-model</span></li>
+<li><span id="nsertms">NS. (2022). In <i>NS start met Implementatie Nieuw beveiligingssysteem treinen</i>. Nederlandse Spoorwegen. https://nieuws.ns.nl/ns-start-met-implementatie-nieuw-beveiligingssysteem-treinen/</span></li>
+<li><span id="usability">In <i>Ergonomics of human-system interaction - Part 11: Usability: Definitions and concepts</i>. ISO 9241-11:2018(en). https://kebs.isolutions.iso.org/obp/ui#!iso:std:iso:9241:-11:ed-2:v1:en</span></li>
+<li><span id="nielsen">in Research-Based User Experience, W. L. 10 usability heuristics for user interface design. In <i>Nielsen Norman Group</i>. https://www.nngroup.com/articles/ten-usability-heuristics/</span></li>
+<li><span id="schaar_2010">Schaar, P. (2010). Privacy by design. <i>Identity in the Information Society</i>, <i>3</i>(2), 267–274. https://doi.org/10.1007/s12394-010-0055-x</span></li>
+<li><span id="c4model">The C4 model for Visualising Software Architecture. In <i>The C4 model for visualising software architecture</i>. https://c4model.com/</span></li>
+<li><span id="vosman_2022">Vosman, Q. (2022). NS passenger numbers halve in 2021. In <i>International Railway Journal</i>. https://www.railjournal.com/financial/ns-passenger-numbers-halve-in-2021/</span></li>
+<li><span id="microservices_general">Larrucea, X., Santamaria, I., Colomo-Palacios, R., &amp; Ebert, C. (2018). Microservices. <i>IEEE Software</i>, <i>35</i>(3), 96–100. https://doi.org/10.1109/MS.2018.2141030</span></li>
+<li><span id="bruns_dunkel">Bruns, R., &amp; Jürgen, D. (2010). Event-driven architecture. In <i>Amazon</i>. Springer. https://aws.amazon.com/event-driven-architecture/</span></li>
+<li><span id="ntier_general">Manuel, P. D., &amp; AlGhamdi, J. (2003). A data-centric design for n-tier architecture. <i>Information Sciences</i>, <i>150</i>(3), 195–206. https://doi.org/https://doi.org/10.1016/S0020-0255(02)00377-8</span></li>
+<li><span id="ntier_medium">N-tier architecture explained. (2022). In <i>Medium</i>. https://medium.com/geekculture/n-tier-architecture-explained-5d2e0246c354</span></li>
+<li><span id="Martinekuan">Martinekuan. N-tier architecture style. In <i>Azure Architecture Center | Microsoft Learn</i>. https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier</span></li>
+<li><span id="richards2020fundamentals">Richards, M., &amp; Ford, N. (2020). <i>Fundamentals of software architecture: an engineering approach</i>. O’Reilly Media.</span></li></ol>
+
+    <p><a href="#appendix"> Back to start of Appendix</a> | <a href="#pyramid">Back to Pyramid</a></p>
+
+  </div>
+
+  <!-- APPENDIX END-->
+
+
+</div>
+
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
+
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function () {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  }
+</script>
+
+</div>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">NS System Design - Software Architecture IN4315</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">NS System Design - Software Architecture IN4315</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>The blog website used to present the progress and results of recreating the NS System for the Software Architecture Project.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
